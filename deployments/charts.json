@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "repository": "charts",
+  "plan_id": "cedc10475f7854cd3e451991de767bbd73bb34115fe915a87c80cf8d59a15fa8",
+  "change_id": "charts:7b19142abafa",
+  "tree_sha256": "7b19142abafa04d8f523b009c294036254bb4498f612d9b3d05b70e8fd0b16d1",
+  "manifest_sha256": "850b2f004f5ec5fa40802aa9cbd6770a3f4ee2481d554309d587be6e2b9e3e9e",
+  "native_revision": "7b19142abafa04d8f523b009c294036254bb4498f612d9b3d05b70e8fd0b16d1",
+  "deployed_at": "2026-07-28T22:30:02Z"
+}

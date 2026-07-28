@@ -7,6 +7,22 @@ id = '53b4b8e5c2289f98d8b4b7537f94ae3facbb03934dc5363e4608bd27703c2837'
 [blob_store]
 type = 'local'
 
+[key]
+[key.archive-signing]
+algorithm = 'openpgp-rsa4096'
+usage = 'sign'
+fingerprint = '1e00d64dcafdff06dc70acefdf1c620e53596d7f'
+created_at = '2026-07-28T22:17:22Z'
+expires_at = '2028-07-27T22:17:22Z'
+public_key = 'keys/archive-signing.gpg'
+public_key_sha256 = '7ee8e8b709c85c7de020bac4ebf0d9e1e5369f8c6c0d80da8b551844a44fcd7a'
+public_armor = 'keys/archive-signing.asc'
+public_armor_sha256 = 'e812747241b2a67c891da6d309d970826a48c341623f5836611b7c81fc0ce427'
+
+[key.archive-signing.ref]
+backend = 'file'
+id = '53b4b8e5c2289f98d8b4b7537f94ae3facbb03934dc5363e4608bd27703c2837/archive-signing'
+
 [repo]
 [repo.apt]
 format = 'deb'
@@ -17,6 +33,8 @@ track = 'stable'
 suite = 'stable'
 component = 'main'
 architectures = ['amd64', 'arm64']
+signing_keys = ['archive-signing']
+signing_keyring = 'keys/archive-signing.gpg'
 
 [repo.apt.host]
 type = 'local'

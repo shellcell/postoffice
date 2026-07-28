@@ -1,0 +1,45 @@
+schema_version = 7
+
+[workspace]
+name = 'postoffice'
+id = '53b4b8e5c2289f98d8b4b7537f94ae3facbb03934dc5363e4608bd27703c2837'
+
+[blob_store]
+type = 'local'
+
+[repo]
+[repo.apt]
+format = 'deb'
+lock = 'repos/apt.lock.toml'
+visibility = 'public'
+gate = 'auto'
+track = 'stable'
+suite = 'stable'
+component = 'main'
+architectures = ['amd64', 'arm64']
+
+[repo.apt.host]
+type = 'local'
+path = 'docs/apt'
+
+[repo.charts]
+format = 'helm'
+lock = 'repos/charts.lock.toml'
+visibility = 'public'
+gate = 'auto'
+track = 'stable'
+
+[repo.charts.host]
+type = 'local'
+path = 'docs/charts'
+
+[repo.releases]
+format = 'raw'
+lock = 'repos/releases.lock.toml'
+visibility = 'public'
+gate = 'auto'
+track = 'stable'
+
+[repo.releases.host]
+type = 'local'
+path = 'docs/releases'

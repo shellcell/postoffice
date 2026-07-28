@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>shellcell packages</title>
+<style>
+  :root { color-scheme: light dark; }
+  body {
+    font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    max-width: 46rem; margin: 0 auto; padding: 2rem 1.25rem;
+  }
+  h1 { font-size: 1.6rem; margin-bottom: .25rem; }
+  h2 { font-size: 1.1rem; margin-top: 2.25rem; }
+  .lede { opacity: .75; margin-top: 0; }
+  pre {
+    background: rgba(127, 127, 127, .12); padding: .75rem 1rem;
+    border-radius: 6px; overflow-x: auto;
+  }
+  code { font: .9em ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .note {
+    border-left: 3px solid rgba(200, 140, 0, .8);
+    padding: .5rem 0 .5rem 1rem; margin: 1rem 0; opacity: .9;
+  }
+  footer { margin-top: 3rem; font-size: .875rem; opacity: .7; }
+  a { color: inherit; }
+</style>
+</head>
+<body>
+<h1>🐌 shellcell packages</h1>
+<p class="lede">Published with <a href="https://github.com/shellcell/snailmail">snailmail</a>.</p>
+
+<h2>Binaries</h2>
+<p>Every release, for every platform. Verify with the checksums beside them.</p>
+<pre><code>curl -LO https://dl.shellcell.dev/releases/snailmail/0.1.2/snailmail_0.1.2_linux_amd64.tar.gz
+curl -LO https://dl.shellcell.dev/releases/SHA256SUMS
+sha256sum -c --ignore-missing SHA256SUMS</code></pre>
+<p><a href="/releases/">Browse all binaries →</a></p>
+
+<h2>Debian and Ubuntu</h2>
+<div class="note">
+  <strong>This repository is not signed yet.</strong> Until it is, apt needs
+  <code>[trusted=yes]</code>, which means nothing verifies what you install.
+  Prefer the binaries above if that matters to you.
+</div>
+<pre><code>echo 'deb [trusted=yes] https://dl.shellcell.dev/apt stable main' \
+  | sudo tee /etc/apt/sources.list.d/shellcell.list
+sudo apt-get update
+sudo apt-get install snailmail</code></pre>
+
+<h2>Helm</h2>
+<pre><code>helm repo add shellcell https://dl.shellcell.dev/charts
+helm repo update</code></pre>
+
+<footer>
+  Each artifact is pinned by SHA-256 in a reviewed lock before it is published.
+</footer>
+</body>
+</html>

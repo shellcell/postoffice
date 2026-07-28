@@ -1,0 +1,7 @@
+# snailmail local state
+.snailmail/
+*.snailmail-plan.json
+
+# Built by `snailmail apply`; the site is published to gh-pages, not committed here.
+docs/
+site/

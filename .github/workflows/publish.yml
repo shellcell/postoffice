@@ -1,0 +1,152 @@
+# Publishes every shellcell package repository to dl.shellcell.dev.
+#
+# main holds desired state: snailmail.toml, the locks, the publication ledgers
+# and deployment receipts. gh-pages holds the built site, force-pushed as a
+# single orphan commit so the published bytes never accumulate in history.
+#
+# Artifact bytes are in neither branch. Each lock pins an origin on the
+# producing repository's GitHub Release, and snailmail refetches from it and
+# checks it against the committed digest, so a fresh runner can rebuild every
+# repository without any object storage.
+name: publish
+
+on:
+  # A tool's release workflow dispatches this after publishing its assets.
+  repository_dispatch:
+    types: [release]
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: Tool repository to adopt from, as owner/name
+        required: false
+        type: string
+      tag:
+        description: Release tag to adopt, such as v0.1.2
+        required: false
+        type: string
+  # Republish after a lock is changed by hand: promote, yank or prune.
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Publishing rebuilds shared state, so a second run waits rather than racing the
+# lock, the ledger and the branch.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+          # Publication ledgers are validated against reachable history.
+          fetch-depth: 0
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version: '1.25'
+
+      # Pinned rather than @latest: the tool that decides what gets published
+      # should change when someone decides to change it. This must be a tag that
+      # exists and includes origin-backed blob restore, or plan cannot rebuild a
+      # repository on a runner that holds no artifacts.
+      - name: Install snailmail
+        env:
+          SNAILMAIL_VERSION: v0.0.3
+        run: |
+          set -euo pipefail
+          go install "github.com/shellcell/snailmail/cmd/snailmail@${SNAILMAIL_VERSION}"
+          snailmail version
+
+      - name: Adopt the release
+        env:
+          TOOL_REPOSITORY: ${{ github.event.client_payload.repository || inputs.repository }}
+          TOOL_TAG: ${{ github.event.client_payload.tag || inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ -z "${TOOL_REPOSITORY}" ] || [ -z "${TOOL_TAG}" ]; then
+            echo "no release to adopt; republishing current desired state"
+            exit 0
+          fi
+          bin/adopt-release.sh "${TOOL_REPOSITORY}" "${TOOL_TAG}"
+
+      - name: Commit desired state
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add snailmail.toml repos
+          if git diff --cached --quiet; then
+            echo "desired state unchanged"
+          else
+            git commit -m "adopt ${TOOL_REPOSITORY:-release} ${TOOL_TAG:-}"
+          fi
+        env:
+          TOOL_REPOSITORY: ${{ github.event.client_payload.repository || inputs.repository }}
+          TOOL_TAG: ${{ github.event.client_payload.tag || inputs.tag }}
+
+      # plan refetches any artifact this runner does not have from the origin
+      # its lock records, verifying each against the committed digest.
+      - name: Plan
+        run: snailmail plan --out snailmail.snailmail-plan.json
+
+      # --runner docker so the Debian repository is checked by a real apt
+      # installing from the built tree, not only parsed.
+      - name: Apply
+        run: snailmail apply --plan snailmail.snailmail-plan.json --runner docker
+
+      - name: Assemble the site
+        run: |
+          set -euo pipefail
+          rm -rf site && mkdir -p site
+          # Each published repository is a symlink to its current managed
+          # release, so the copy dereferences: Git stores a symlink as a symlink
+          # and Pages would serve it as a text file rather than following it.
+          # The glob also skips snailmail's control and staging directories,
+          # which are dot-prefixed and must not reach the site.
+          for repository in docs/*/; do
+              name=$(basename "$repository")
+              cp -RL "$repository" "site/$name"
+          done
+          # Owning the apex of the subdomain, so the CNAME lives at the root.
+          echo "dl.shellcell.dev" > site/CNAME
+          # Pages runs Jekyll by default, which would drop files beginning with
+          # an underscore and rewrite others.
+          touch site/.nojekyll
+          cp public/index.html site/index.html
+          find site -maxdepth 2 | sort | head -40
+
+      - name: Deploy the site
+        run: |
+          set -euo pipefail
+          # An orphan commit each time: the site is a snapshot, and keeping its
+          # history would mean keeping every artifact ever published.
+          cd site
+          git init -q -b gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -qm "publish ${GITHUB_SHA}"
+          git push --force --quiet \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      # Ledgers and receipts are written by apply, so desired state and the
+      # record of what happened are pushed together after it.
+      - name: Push the publication record
+        run: |
+          set -euo pipefail
+          # Neither directory exists until the first apply has written one.
+          git add --all -- publications deployments 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m "record publication ${GITHUB_SHA}"
+          fi
+          git push origin HEAD:main

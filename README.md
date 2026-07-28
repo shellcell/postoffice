@@ -71,22 +71,43 @@ snailmail prune releases --keep 5      # bound how many versions stay visible
 Every one of these edits a lock. Publishing is always `plan` then `apply`, run
 by the workflow on push.
 
-## Before announcing the apt repository
+## Signing
 
-It is currently **unsigned**, so clients need `[trusted=yes]` and nothing
-verifies what they install. To fix that:
+The apt repository is signed by `archive-signing`, an OpenPGP RSA-4096 key. The
+private key lives outside the workspace in
+`$XDG_DATA_HOME/snailmail/private-keys/<workspace-id>/`, mode `0600`; only the
+public forms are committed, as `keys/archive-signing.gpg` and `.asc`.
 
-```sh
-export SNAILMAIL_KEY_PASSPHRASE='use-a-secret-manager-value'
-snailmail keys new archive-signing --expires-in 17520h
-snailmail setup deb --name apt --output docs/apt --suite stable \
-  --architectures amd64,arm64 --signing-key archive-signing
-snailmail keys publish archive-signing
+Publishing needs three settings on this repository:
+
+| setting | value |
+|---|---|
+| `vars.SNAILMAIL_SIGNING_KEY_REF` | `53b4b8e5c2289f98d8b4b7537f94ae3facbb03934dc5363e4608bd27703c2837/archive-signing` |
+| `secrets.SNAILMAIL_SIGNING_PRIVATE_KEY` | contents of that `.asc` private key file |
+| `secrets.SNAILMAIL_KEY_PASSPHRASE` | the passphrase, at least 24 bytes |
+
+Locally, export `SNAILMAIL_KEY_PASSPHRASE` before `plan` or `apply`; without it
+they refuse to run rather than publish something unsigned.
+
+Rotation is a first-class operation — `snailmail keys rotate apt --successor
+<key>`, then `--advance` once the overlap has been served long enough for
+clients to have refreshed. `snailmail keys audit` reports whether the current
+state is valid.
+
+### Attaching a key to a repository that already exists
+
+`snailmail setup` only creates repositories; it refuses a name that is already
+configured, and there is no command that adds a signing key to an existing one.
+Until there is, edit `snailmail.toml` directly and add both lines to the
+repository's table:
+
+```toml
+signing_keys = ['archive-signing']
+signing_keyring = 'keys/archive-signing.gpg'
 ```
 
-Then put the encrypted private key in `SNAILMAIL_SIGNING_PRIVATE_KEY`, the
-passphrase in `SNAILMAIL_KEY_PASSPHRASE`, and the key reference in
-`SNAILMAIL_SIGNING_KEY_REF`, and drop the `[trusted=yes]` from the landing page.
+`snailmail keys audit` verifies the result.
+
 
 ## Requirements
 

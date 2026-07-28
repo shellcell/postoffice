@@ -32,21 +32,20 @@
 
 <h2>Binaries</h2>
 <p>Every release, for every platform. Verify with the checksums beside them.</p>
-<pre><code>curl -LO https://dl.shellcell.dev/releases/snailmail/0.1.2/snailmail_0.1.2_linux_amd64.tar.gz
+<pre><code>curl -LO https://dl.shellcell.dev/releases/snailmail/0.0.3/snailmail_0.0.3_linux_amd64.tar.gz
 curl -LO https://dl.shellcell.dev/releases/SHA256SUMS
 sha256sum -c --ignore-missing SHA256SUMS</code></pre>
 <p><a href="/releases/">Browse all binaries →</a></p>
 
 <h2>Debian and Ubuntu</h2>
-<div class="note">
-  <strong>This repository is not signed yet.</strong> Until it is, apt needs
-  <code>[trusted=yes]</code>, which means nothing verifies what you install.
-  Prefer the binaries above if that matters to you.
-</div>
-<pre><code>echo 'deb [trusted=yes] https://dl.shellcell.dev/apt stable main' \
+<pre><code>curl -fsSL https://dl.shellcell.dev/apt/keys/archive-signing.gpg \
+  | sudo tee /usr/share/keyrings/shellcell.gpg &gt; /dev/null
+echo 'deb [signed-by=/usr/share/keyrings/shellcell.gpg] https://dl.shellcell.dev/apt stable main' \
   | sudo tee /etc/apt/sources.list.d/shellcell.list
 sudo apt-get update
 sudo apt-get install snailmail</code></pre>
+<p>The <code>signed-by</code> keyring scopes that key to this repository alone,
+so it can never vouch for anything else on your system.</p>
 
 <h2>Helm</h2>
 <pre><code>helm repo add shellcell https://dl.shellcell.dev/charts

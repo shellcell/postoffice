@@ -97,6 +97,25 @@ jobs:
       - name: Plan
         run: snailmail plan --out snailmail.snailmail-plan.json
 
+      # The apt repository declares arm64, and this runner is amd64. Verifying
+      # it means executing an arm64 container, which the kernel refuses without
+      # binfmt_misc handlers. Ubuntu's own packages register them, so no
+      # third-party image or action is needed.
+      #
+      # Removing this is not free: it would not skip the arm64 check, it would
+      # fail the publish. Narrow the repository's architectures instead if you
+      # no longer want arm64 verified.
+      - name: Register emulation for foreign architectures
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq qemu-user-static binfmt-support
+          # Prove the handlers are live before relying on them.
+          test -e /proc/sys/fs/binfmt_misc/qemu-aarch64
+          docker run --rm --platform linux/arm64 \
+            debian@sha256:9b67294679b30e5d6ab257b40594feeb4a4b81f7fcf4131f4decf0d6a212a9b0 \
+            dpkg --print-architecture
+
       # --runner docker so the Debian repository is checked by a real apt
       # installing from the built tree, not only parsed.
       - name: Apply

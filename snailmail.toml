@@ -29,12 +29,12 @@ format = 'deb'
 lock = 'repos/apt.lock.toml'
 visibility = 'public'
 gate = 'auto'
+signing_keys = ['archive-signing']
+signing_keyring = 'keys/archive-signing.gpg'
 track = 'stable'
 suite = 'stable'
 component = 'main'
 architectures = ['amd64', 'arm64']
-signing_keys = ['archive-signing']
-signing_keyring = 'keys/archive-signing.gpg'
 
 [repo.apt.host]
 type = 'local'

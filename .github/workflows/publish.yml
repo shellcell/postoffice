@@ -104,9 +104,36 @@ jobs:
           TOOL_REPOSITORY: ${{ github.event.client_payload.repository || inputs.repository }}
           TOOL_TAG: ${{ github.event.client_payload.tag || inputs.tag }}
 
+      # The apt repository is signed, so the runner needs the private key the
+      # workspace names. The key file itself is encrypted; the passphrase goes
+      # in a file rather than the environment so it is not visible to every
+      # later step or to anything that inspects the process.
+      - name: Prepare the signing key
+        env:
+          SIGNING_KEY_REF: ${{ vars.SNAILMAIL_SIGNING_KEY_REF }}
+          SIGNING_PRIVATE_KEY: ${{ secrets.SNAILMAIL_SIGNING_PRIVATE_KEY }}
+          SIGNING_PASSPHRASE: ${{ secrets.SNAILMAIL_KEY_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SIGNING_KEY_REF}" ] || [ -z "${SIGNING_PRIVATE_KEY}" ]; then
+            echo "::error::the apt repository is signed but no signing key is configured"
+            exit 1
+          fi
+          case "${SIGNING_KEY_REF}" in
+            *..*|/*|*\\*) echo "::error::unsafe signing key reference"; exit 1 ;;
+          esac
+          store="${HOME}/.local/share/snailmail/private-keys"
+          mkdir -p "${store}/$(dirname "${SIGNING_KEY_REF}")"
+          install -m 600 /dev/null "${store}/${SIGNING_KEY_REF}.asc"
+          printf '%s' "${SIGNING_PRIVATE_KEY}" > "${store}/${SIGNING_KEY_REF}.asc"
+          install -m 600 /dev/null "${RUNNER_TEMP}/snailmail-passphrase"
+          printf '%s' "${SIGNING_PASSPHRASE}" > "${RUNNER_TEMP}/snailmail-passphrase"
+
       # plan refetches any artifact this runner does not have from the origin
       # its lock records, verifying each against the committed digest.
       - name: Plan
+        env:
+          SNAILMAIL_KEY_PASSPHRASE_FILE: ${{ runner.temp }}/snailmail-passphrase
         run: snailmail plan --out snailmail.snailmail-plan.json
 
       # The apt repository declares arm64, and this runner is amd64. Verifying
@@ -131,6 +158,8 @@ jobs:
       # --runner docker so the Debian repository is checked by a real apt
       # installing from the built tree, not only parsed.
       - name: Apply
+        env:
+          SNAILMAIL_KEY_PASSPHRASE_FILE: ${{ runner.temp }}/snailmail-passphrase
         run: snailmail apply --plan snailmail.snailmail-plan.json --runner docker
 
       - name: Assemble the site

@@ -1,0 +1,16 @@
+{
+  "schema_version": 2,
+  "repository": "apt",
+  "plan_id": "cedc10475f7854cd3e451991de767bbd73bb34115fe915a87c80cf8d59a15fa8",
+  "change_id": "apt:c05ee7e223e4",
+  "tree_sha256": "c05ee7e223e47bda0090e02d50ec12eced782ca39aafc35b39dccbd3790cda4c",
+  "manifest_sha256": "1cdbbd6d385b1a978761c7b70140d522128de2960bc8f4d00950bd7d96897799",
+  "native_revision": "c05ee7e223e47bda0090e02d50ec12eced782ca39aafc35b39dccbd3790cda4c",
+  "deployed_at": "2026-07-28T22:30:02Z",
+  "active_signing_fingerprint": "1e00d64dcafdff06dc70acefdf1c620e53596d7f",
+  "trusted_signing_fingerprints": [
+    "1e00d64dcafdff06dc70acefdf1c620e53596d7f"
+  ],
+  "signing_keyring_path": "keys/archive-signing.gpg",
+  "trust_since": "2026-07-28T22:30:34Z"
+}

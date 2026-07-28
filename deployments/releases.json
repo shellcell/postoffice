@@ -1,0 +1,10 @@
+{
+  "schema_version": 2,
+  "repository": "releases",
+  "plan_id": "cedc10475f7854cd3e451991de767bbd73bb34115fe915a87c80cf8d59a15fa8",
+  "change_id": "releases:3ec8a46512fa",
+  "tree_sha256": "3ec8a46512faba77c8f61b89149a01185e892aa310bd4151115d3ccf700edbb9",
+  "manifest_sha256": "7def3088e49f9125167eefb1b48c795c6c3355571d62e1f4ea07bdabc4024a3f",
+  "native_revision": "3ec8a46512faba77c8f61b89149a01185e892aa310bd4151115d3ccf700edbb9",
+  "deployed_at": "2026-07-28T22:30:02Z"
+}

@@ -49,20 +49,32 @@ jobs:
           ref: main
           # Publication ledgers are validated against reachable history.
           fetch-depth: 0
-      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
-        with:
-          go-version: '1.25'
 
-      # Pinned rather than @latest: the tool that decides what gets published
-      # should change when someone decides to change it. This must be a tag that
-      # exists and includes origin-backed blob restore, or plan cannot rebuild a
-      # repository on a runner that holds no artifacts.
+      # Installed from the release asset, not `go install`.
+      #
+      # proxy.golang.org caches a module version's bytes on first fetch and
+      # serves them forever, so a tag that moves after publication keeps
+      # resolving to the code it originally pointed at. Release assets carry no
+      # such history: they are the artifacts this workspace already adopts and
+      # distributes, so the tool that publishes them is the tool being published.
+      #
+      # SHA256SUMS from the same release is the pin, which is the trust this
+      # workspace already places in it through bin/adopt-release.sh.
       - name: Install snailmail
         env:
           SNAILMAIL_VERSION: v0.0.3
         run: |
           set -euo pipefail
-          go install "github.com/shellcell/snailmail/cmd/snailmail@${SNAILMAIL_VERSION}"
+          version=${SNAILMAIL_VERSION#v}
+          asset="snailmail_${version}_linux_amd64.tar.gz"
+          download="https://github.com/shellcell/snailmail/releases/download/${SNAILMAIL_VERSION}"
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+            --max-time 300 --remote-name-all \
+            "${download}/${asset}" "${download}/SHA256SUMS"
+          grep -F "  ./${asset}" SHA256SUMS | sed "s|\./||" | sha256sum -c -
+          tar -xzf "$asset" snailmail
+          install -m 0755 snailmail /usr/local/bin/snailmail
+          rm -f "$asset" SHA256SUMS snailmail
           snailmail version
 
       - name: Adopt the release

@@ -1,4 +1,37 @@
 schema_version = 2
 repository = 'apt'
-package_version = []
-placement = []
+
+[[package_version]]
+package = 'snailmail'
+version = '0.0.3-1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.3-1_amd64.deb'
+architecture = 'amd64'
+size = 6071936
+md5 = '0f79202c49b0d008bb3b444a518001d8'
+sha1 = '89177a881d02deb1707c3b89834e8d02ce9465ee'
+sha256 = '611a4dd5c98f61c90a4e7b73f0f958b3751dd37a59efc10c131ef65dbd8d560d'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.3/snailmail_0.0.3-1_amd64.deb'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.3-1_arm64.deb'
+architecture = 'arm64'
+size = 5339914
+md5 = '6b0efc8bb66d2b3fa74d35542284e5aa'
+sha1 = 'ff92c808bc014e4129eb97b1b2e820d672fffa6b'
+sha256 = '7963ba3b968e977c49d6f69cbde0b97f7ad480d20ba04be09e71b3bb8befd6a1'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.3/snailmail_0.0.3-1_arm64.deb'
+
+[[placement]]
+package = 'snailmail'
+version = '0.0.3-1'
+track = 'stable'
+distro = 'stable'

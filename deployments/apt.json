@@ -1,16 +1,16 @@
 {
   "schema_version": 2,
   "repository": "apt",
-  "plan_id": "562a3101fc96d8174c027e7b630992faa995970a17e298ac0259c6af024cf9d7",
-  "change_id": "apt:690345286a26",
-  "tree_sha256": "690345286a260d39f7d104dd9481998699ed4dab59cda203a4c13e1a58a36afd",
-  "manifest_sha256": "128e2f40bf06c7231428423d32b43dff778f61f948f30ae2a56c53d1ed9ae8a9",
-  "native_revision": "690345286a260d39f7d104dd9481998699ed4dab59cda203a4c13e1a58a36afd",
-  "deployed_at": "2026-07-29T08:35:27Z",
+  "plan_id": "880688b4228120f7c140ba58eed8d65ecdd47631a0dc779f31d5b3836aa85ff7",
+  "change_id": "apt:c779912d598a",
+  "tree_sha256": "c779912d598af6e669f007073027df52feafe9655daa9a435e2671bcea7b940e",
+  "manifest_sha256": "28685dd096b345ebbeaeada90ebce1b164006f48c40c432f98db7c3b8e880e66",
+  "native_revision": "c779912d598af6e669f007073027df52feafe9655daa9a435e2671bcea7b940e",
+  "deployed_at": "2026-07-29T09:35:15Z",
   "active_signing_fingerprint": "1e00d64dcafdff06dc70acefdf1c620e53596d7f",
   "trusted_signing_fingerprints": [
     "1e00d64dcafdff06dc70acefdf1c620e53596d7f"
   ],
   "signing_keyring_path": "keys/archive-signing.gpg",
-  "trust_since": "2026-07-29T08:37:32Z"
+  "trust_since": "2026-07-29T09:40:00Z"
 }

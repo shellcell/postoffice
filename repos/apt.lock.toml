@@ -148,6 +148,37 @@ added = '2026-07-29T09:35:12Z'
 kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail_0.1.0-1_arm64.deb'
 
+[[package_version]]
+package = 'ttysvg'
+version = '0.1.2'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_amd64.deb'
+architecture = 'amd64'
+size = 1332908
+md5 = '7c986cdde00b1b4ee9ec49ef72669139'
+sha1 = '34e768fe97ba00ee025919d2d9f11044c85a3b83'
+sha256 = 'edd5bc14e13678e9064adceba0dffcfa10fb34709d969ddafa11579460a0f784'
+added = '2026-07-29T10:16:51Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg_0.1.2_amd64.deb'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_arm64.deb'
+architecture = 'arm64'
+size = 1217650
+md5 = 'a6997cbbbcca1463482c02bb41f576e8'
+sha1 = '3cbb650a45391fbc0480f439d663a5235b41ad9d'
+sha256 = '79ebe7624ed63a4db156c8d7215648ac46fc1532f686f5371ce24d5de8728731'
+added = '2026-07-29T10:16:52Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg_0.1.2_arm64.deb'
+
 [[placement]]
 package = 'snailmail'
 version = '0.0.3-1'
@@ -175,5 +206,11 @@ distro = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.1.0-1'
+track = 'stable'
+distro = 'stable'
+
+[[placement]]
+package = 'ttysvg'
+version = '0.1.2'
 track = 'stable'
 distro = 'stable'

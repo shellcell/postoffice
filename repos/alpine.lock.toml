@@ -61,6 +61,37 @@ added = '2026-07-29T09:35:15Z'
 kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail_0.1.0-r1_x86_64.apk'
 
+[[package_version]]
+package = 'ttysvg'
+version = '0.1.2'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_aarch64.apk'
+architecture = 'aarch64'
+size = 1248295
+md5 = '531c12d1328b57a507ff9edfba2fc21e'
+sha1 = '1050bf010b1938dbc4eec64e21d3645d250406f9'
+sha256 = 'f0fdcac3d0245f8d029bea24b17a5c31f699c0e8c125ef124f3e53b801e5eb7f'
+added = '2026-07-29T10:16:55Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg_0.1.2_aarch64.apk'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_x86_64.apk'
+architecture = 'x86_64'
+size = 1373446
+md5 = 'e64f2a1524cb088cba995d71a1154252'
+sha1 = '51adc98f238351b81f730fd99fc213906e94735e'
+sha256 = 'c0f2cebc29b25aa96bcfe44bbdea4bcdd9e6719811c1cc1a0235ae8430700fa0'
+added = '2026-07-29T10:16:54Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg_0.1.2_x86_64.apk'
+
 [[placement]]
 package = 'snailmail'
 version = '0.0.9-r1'
@@ -69,4 +100,9 @@ track = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.1.0-r1'
+track = 'stable'
+
+[[placement]]
+package = 'ttysvg'
+version = '0.1.2'
 track = 'stable'

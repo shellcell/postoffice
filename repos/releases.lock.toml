@@ -331,6 +331,89 @@ added = '2026-07-29T09:35:10Z'
 kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail_0.1.0_linux_arm64.tar.gz'
 
+[[package_version]]
+package = 'ttysvg'
+version = '0.1.2'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_linux_386.tar.gz'
+architecture = '386'
+size = 1244819
+md5 = '0872a8a213325f4f2015563e746904f7'
+sha1 = '106fadd14c0b2b856d434b4bc94352670f73e04b'
+sha256 = '03c6c86f7af044e43cf4dc8f2603d78704cf07dbc406b0f7eb2d74f006770ce0'
+added = '2026-07-29T10:17:44Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg-v0.1.2-linux-386.tar.gz'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_darwin_amd64.tar.gz'
+architecture = 'amd64'
+size = 1305014
+md5 = '024e6cdeee20d82c0d6a4dd418ee938a'
+sha1 = '74c16aacc36d1c18fd56ff9fbe84a6a41e3a7f4f'
+sha256 = '9439d2ce75c180fdcaa3cdb1e262526525d3762afa7ddf250373c9cff8c0ab5a'
+added = '2026-07-29T10:17:45Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg-v0.1.2-darwin-amd64.tar.gz'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_linux_amd64.tar.gz'
+architecture = 'amd64'
+size = 1316747
+md5 = 'dbc376a1542d0c80bdf3406d30c79f9b'
+sha1 = '6d91f4fa22ca4897c93f7679c92d75bec3c86646'
+sha256 = '879c0e74357fc71673c7aa99570a41731d81d44d8b3476d93a3d23bd2716bd1f'
+added = '2026-07-29T10:17:42Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg-v0.1.2-linux-amd64.tar.gz'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_linux_arm.tar.gz'
+architecture = 'arm'
+size = 1222951
+md5 = '3640e73a02b1cecdcefa72641fca3075'
+sha1 = '3ee7e72766fd76c8a45fb77f0bc3395433d3d8f2'
+sha256 = 'c5c4b20bfd8201d665e56e251a8f3fe38409b485cee569b04e2a477cc7da14eb'
+added = '2026-07-29T10:17:44Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg-v0.1.2-linux-arm.tar.gz'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_darwin_arm64.tar.gz'
+architecture = 'arm64'
+size = 1209327
+md5 = '222b15545d29604ddec7a5b424aa040a'
+sha1 = 'd55408a8c9abbaed967365ba1be72bee2ebfcfbc'
+sha256 = '122f23c3e7ab1e829927062ae92261ed4c8d82b2104e1d2de3be433b66c62ca7'
+added = '2026-07-29T10:17:45Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg-v0.1.2-darwin-arm64.tar.gz'
+
+[[package_version.blob]]
+filename = 'ttysvg_0.1.2_linux_arm64.tar.gz'
+architecture = 'arm64'
+size = 1195425
+md5 = 'cd2abb0b886c4b11d64a6dc0f2e5dc84'
+sha1 = '671e5ebf12b75edb83e027663b182e8edf467a78'
+sha256 = '83ec4c913e2339efdc7d02034be360cbbe46b4794678533c0d15b545152beebe'
+added = '2026-07-29T10:17:43Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg-v0.1.2-linux-arm64.tar.gz'
+
 [[placement]]
 package = 'snailmail'
 version = '0.0.3'
@@ -354,4 +437,9 @@ track = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.1.0'
+track = 'stable'
+
+[[placement]]
+package = 'ttysvg'
+version = '0.1.2'
 track = 'stable'

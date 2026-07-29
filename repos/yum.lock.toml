@@ -61,6 +61,37 @@ added = '2026-07-29T09:35:14Z'
 kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail-0.1.0-1.x86_64.rpm'
 
+[[package_version]]
+package = 'ttysvg'
+version = '0.1.2-1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'ttysvg-0.1.2-1.aarch64.rpm'
+architecture = 'aarch64'
+size = 1213974
+md5 = 'dddedb49be1b23758303a3746ea6dbc1'
+sha1 = '06590fadd696266b3239a7c6c49847a1db20a74a'
+sha256 = 'a390725031cf291500ef20357413bbbb762344df2efe831a30e2b5aa1e6227c2'
+added = '2026-07-29T10:16:54Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg-0.1.2-1.aarch64.rpm'
+
+[[package_version.blob]]
+filename = 'ttysvg-0.1.2-1.x86_64.rpm'
+architecture = 'x86_64'
+size = 1331539
+md5 = '351b0d7720ab1997f2a226837d4bdf59'
+sha1 = '7eee6a250fc038e85d1829792163473c13ddd8d6'
+sha256 = '65b276298ae2ac63dbe7b9103d4cb7249a752ad359322cba11bc716c712412f2'
+added = '2026-07-29T10:16:53Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/ttysvg/releases/download/v0.1.2/ttysvg-0.1.2-1.x86_64.rpm'
+
 [[placement]]
 package = 'snailmail'
 version = '0.0.9-1'
@@ -69,4 +100,9 @@ track = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.1.0-1'
+track = 'stable'
+
+[[placement]]
+package = 'ttysvg'
+version = '0.1.2-1'
 track = 'stable'

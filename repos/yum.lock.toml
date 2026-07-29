@@ -30,7 +30,43 @@ sha256 = 'e560a18cd76c7a335b6488a2da3abe856573b0d90cef66bfeffd5e0910417c9a'
 kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.9/snailmail-0.0.9-1.x86_64.rpm'
 
+[[package_version]]
+package = 'snailmail'
+version = '0.1.0-1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail-0.1.0-1.aarch64.rpm'
+architecture = 'aarch64'
+size = 7209447
+md5 = '65a2a2972359fc1b27be14ec803abc50'
+sha1 = 'f6d10f2963fef66a74774cd767363882fee8ed51'
+sha256 = 'd99980932073e8a933b883e8bf4d993ed06a01aec17dc2aac39f92788c7ad33e'
+added = '2026-07-29T09:35:13Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail-0.1.0-1.aarch64.rpm'
+
+[[package_version.blob]]
+filename = 'snailmail-0.1.0-1.x86_64.rpm'
+architecture = 'x86_64'
+size = 8121611
+md5 = 'e7e743febf1ad04a2798861f1d0ebb3b'
+sha1 = '2a40cf6537cc4aa71ef9c67668e1f24c68b25a88'
+sha256 = 'a84ee578e0b16f4e8fcafa04ab315583e24c1e64df3a591fa9215884bda57488'
+added = '2026-07-29T09:35:14Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail-0.1.0-1.x86_64.rpm'
+
 [[placement]]
 package = 'snailmail'
 version = '0.0.9-1'
+track = 'stable'
+
+[[placement]]
+package = 'snailmail'
+version = '0.1.0-1'
 track = 'stable'

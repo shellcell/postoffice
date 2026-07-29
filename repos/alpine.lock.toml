@@ -30,7 +30,43 @@ sha256 = 'fd44a4dbe446f78b99104fb8fd1b5dd60c928d7e0a4891b17dc0978edbbba98c'
 kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.9/snailmail_0.0.9-r1_x86_64.apk'
 
+[[package_version]]
+package = 'snailmail'
+version = '0.1.0-r1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.0-r1_aarch64.apk'
+architecture = 'aarch64'
+size = 7209965
+md5 = 'ff706d60e1a6b35006a6c9b6043a414f'
+sha1 = '4aad38d776eda3d623cc27a091546b64ef7660a4'
+sha256 = '00858adf70ed8059767c7c2498fed4f901d9655c9b0cf07b5b93cc6824e93170'
+added = '2026-07-29T09:35:14Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail_0.1.0-r1_aarch64.apk'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.0-r1_x86_64.apk'
+architecture = 'x86_64'
+size = 8117970
+md5 = '5566ffa47a4b5455675f422d33121706'
+sha1 = '40a6f9ccb8ef35b63886f3476c573966e703b368'
+sha256 = '824719a0faebc1267cc5daabbec3a80f9222224e6a5884f61193b8cdb590157f'
+added = '2026-07-29T09:35:15Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail_0.1.0-r1_x86_64.apk'
+
 [[placement]]
 package = 'snailmail'
 version = '0.0.9-r1'
+track = 'stable'
+
+[[placement]]
+package = 'snailmail'
+version = '0.1.0-r1'
 track = 'stable'

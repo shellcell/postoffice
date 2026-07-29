@@ -62,7 +62,7 @@ jobs:
       # workspace already places in it through bin/adopt-release.sh.
       - name: Install snailmail
         env:
-          SNAILMAIL_VERSION: v0.0.9
+          SNAILMAIL_VERSION: v0.1.0
         run: |
           set -euo pipefail
           version=${SNAILMAIL_VERSION#v}
@@ -192,7 +192,11 @@ jobs:
           # Pages runs Jekyll by default, which would drop files beginning with
           # an underscore and rewrite others.
           touch site/.nojekyll
-          cp public/index.html site/index.html
+          # The landing page is generated from the locks, so the versions it
+          # advertises cannot drift from the ones actually published.
+          snailmail site --output site/index.html \
+              --title "shellcell packages" \
+              --description "Signed package repositories for the shellcell tools."
           find site -maxdepth 2 | sort | head -40
 
       - name: Deploy the site

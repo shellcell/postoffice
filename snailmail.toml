@@ -52,6 +52,7 @@ architectures = ['x86_64', 'aarch64']
 [repo.alpine.host]
 type = 'local'
 path = 'docs/alpine'
+canonical_endpoint = 'https://dl.shellcell.dev/alpine'
 
 [repo.apt]
 format = 'deb'
@@ -68,6 +69,7 @@ architectures = ['amd64', 'arm64']
 [repo.apt.host]
 type = 'local'
 path = 'docs/apt'
+canonical_endpoint = 'https://dl.shellcell.dev/apt'
 
 [repo.charts]
 format = 'helm'
@@ -79,6 +81,7 @@ track = 'stable'
 [repo.charts.host]
 type = 'local'
 path = 'docs/charts'
+canonical_endpoint = 'https://dl.shellcell.dev/charts'
 
 [repo.releases]
 format = 'raw'
@@ -90,6 +93,7 @@ track = 'stable'
 [repo.releases.host]
 type = 'local'
 path = 'docs/releases'
+canonical_endpoint = 'https://dl.shellcell.dev/releases'
 
 [repo.yum]
 format = 'rpm'
@@ -103,3 +107,4 @@ track = 'stable'
 [repo.yum.host]
 type = 'local'
 path = 'docs/yum'
+canonical_endpoint = 'https://dl.shellcell.dev/yum'

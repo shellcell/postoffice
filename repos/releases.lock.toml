@@ -66,7 +66,77 @@ sha256 = 'ae0676e09fb158fd6a9c9b1b3cdd98358f29b42f7d2fd0dba82d3da276e107a2'
 kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.3/snailmail_0.0.3_linux_arm64.tar.gz'
 
+[[package_version]]
+package = 'snailmail'
+version = '0.0.5'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.5_darwin_amd64.tar.gz'
+architecture = 'amd64'
+size = 7782226
+md5 = '47029645d0dcef5afe8a502599cfa542'
+sha1 = '82e26a9ca859c2b79f6c499f3f41d37458464a89'
+sha256 = '80470ccde25c1572f1557ccfe97d5a21c9e05d057fe1e1a0c44e22f68328fc01'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.5/snailmail_0.0.5_darwin_amd64.tar.gz'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.5_freebsd_amd64.tar.gz'
+architecture = 'amd64'
+size = 7606831
+md5 = 'b614cf710c207fc7dd840ffa0ac24b65'
+sha1 = '0a06c51c24d3f9fe902a38bfe6ac838175e70a35'
+sha256 = '75be721d634d391789be46f962c94f4b5eb5f3ae89f24d6c8cf94b9148a7230e'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.5/snailmail_0.0.5_freebsd_amd64.tar.gz'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.5_linux_amd64.tar.gz'
+architecture = 'amd64'
+size = 7677328
+md5 = 'dee2909fb7a9f48e1ad192ef5203fa1f'
+sha1 = '2e53c506f04c2d55a2f768c78db51a4266250db6'
+sha256 = '1727128648471fb0282a1e546a8345dba27bd8e8b2d864ee4b1fa220106df69c'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.5/snailmail_0.0.5_linux_amd64.tar.gz'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.5_darwin_arm64.tar.gz'
+architecture = 'arm64'
+size = 7106189
+md5 = 'e916f1d0044b7cc5825a14d7b67f3728'
+sha1 = '44a98a4be48788c417870df4e0e2997ea589bc2a'
+sha256 = '2472b8bceb9732e4e6d9920fbfa329f3cbba473b85a0b9591ab846621540a3e4'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.5/snailmail_0.0.5_darwin_arm64.tar.gz'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.5_linux_arm64.tar.gz'
+architecture = 'arm64'
+size = 6804089
+md5 = '479949aa5a9201e07f3b1167d544ce63'
+sha1 = '7134064528b08f6be121ca67191e9be3af1832da'
+sha256 = '16e6b8dc94616d239ab4f9888386c04bcd3f362a5b44ffbc48d75a1462ebe40e'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.5/snailmail_0.0.5_linux_arm64.tar.gz'
+
 [[placement]]
 package = 'snailmail'
 version = '0.0.3'
+track = 'stable'
+
+[[placement]]
+package = 'snailmail'
+version = '0.0.5'
 track = 'stable'

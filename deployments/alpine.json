@@ -1,16 +1,16 @@
 {
   "schema_version": 2,
   "repository": "alpine",
-  "plan_id": "01bf8be8425a81bf40d8696d00071e20026ab8e460c965a18ec9b250b398896c",
-  "change_id": "alpine:628ca6233385",
-  "tree_sha256": "628ca6233385755ab01ea01458ed667943bce05d5355a7d7b5546b96f8521466",
-  "manifest_sha256": "7d5a4cfc8aa4dffc85c38ef06678c1211a73b057605fe4098b269b44a066f044",
-  "native_revision": "628ca6233385755ab01ea01458ed667943bce05d5355a7d7b5546b96f8521466",
-  "deployed_at": "2026-07-29T10:19:18Z",
+  "plan_id": "3f64b8c2618c1e8a1ba5763a59cc281e73531d7cdeb83efe46563cd7f68bee78",
+  "change_id": "alpine:b2cbf860665c",
+  "tree_sha256": "b2cbf860665cb7d6e4a4b55f0adb940edb09b4f21af494abe121b02672e888ab",
+  "manifest_sha256": "0b801c43afcc9bdbdf1b25fd9caa71d07533feef537a83e11fc5562f0a3ed7e9",
+  "native_revision": "b2cbf860665cb7d6e4a4b55f0adb940edb09b4f21af494abe121b02672e888ab",
+  "deployed_at": "2026-07-29T11:15:01Z",
   "active_signing_fingerprint": "c0006940f42b2c7ea44c95f91275f5b5c1f5002f",
   "trusted_signing_fingerprints": [
     "c0006940f42b2c7ea44c95f91275f5b5c1f5002f"
   ],
   "signing_keyring_path": "keys/alpine-archive-keyring.gpg",
-  "trust_since": "2026-07-29T10:23:41Z"
+  "trust_since": "2026-07-29T11:18:14Z"
 }

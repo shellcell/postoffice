@@ -24,6 +24,15 @@ on:
         description: Release tag to adopt, such as v0.1.2
         required: false
         type: string
+      pin_downloads:
+        description: >-
+          Adopt packages the release publishes no digest for, pinning the bytes
+          this run downloads instead. A weaker claim about what was released,
+          so it is never the default and never available to an automatic
+          dispatch — someone chooses it.
+        required: false
+        default: false
+        type: boolean
   # Republish after a lock is changed by hand: promote, yank or prune.
   push:
     branches: [main]
@@ -62,7 +71,7 @@ jobs:
       # workspace already places in it through bin/adopt-release.sh.
       - name: Install snailmail
         env:
-          SNAILMAIL_VERSION: v0.1.0
+          SNAILMAIL_VERSION: v0.1.1
         run: |
           set -euo pipefail
           version=${SNAILMAIL_VERSION#v}
@@ -81,13 +90,21 @@ jobs:
         env:
           TOOL_REPOSITORY: ${{ github.event.client_payload.repository || inputs.repository }}
           TOOL_TAG: ${{ github.event.client_payload.tag || inputs.tag }}
+          PIN_DOWNLOADS: ${{ inputs.pin_downloads }}
+          # Raises the anonymous API rate limit when listing the release's
+          # assets. Read-only, and on this repository only.
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           if [ -z "${TOOL_REPOSITORY}" ] || [ -z "${TOOL_TAG}" ]; then
             echo "no release to adopt; republishing current desired state"
             exit 0
           fi
-          bin/adopt-release.sh "${TOOL_REPOSITORY}" "${TOOL_TAG}"
+          pin=()
+          if [ "${PIN_DOWNLOADS}" = "true" ]; then
+            pin=(--pin-downloads)
+          fi
+          bin/adopt-release.sh ${pin[@]+"${pin[@]}"} "${TOOL_REPOSITORY}" "${TOOL_TAG}"
 
       - name: Commit desired state
         run: |
@@ -167,12 +184,24 @@ jobs:
             debian@sha256:9b67294679b30e5d6ab257b40594feeb4a4b81f7fcf4131f4decf0d6a212a9b0 \
             dpkg --print-architecture
 
-      # --runner docker so the Debian repository is checked by a real apt
+      # --runner docker so each repository is checked by a real client
       # installing from the built tree, not only parsed.
+      #
+      # --image-registry because Docker Hub rate-limits anonymous pulls by
+      # source address and hosted runners share them, so a publication can fail
+      # for a reason that has nothing to do with its packages. Every
+      # verification image is digest-pinned, so a mirror serves the same bytes
+      # and the pin is unchanged — this picks a different route to them, not
+      # different images. Set the VERIFICATION_IMAGE_REGISTRY variable to use
+      # another mirror, or to docker.io to go back to pulling from there.
       - name: Apply
         env:
           SNAILMAIL_KEY_PASSPHRASE_FILE: ${{ runner.temp }}/snailmail-passphrase
-        run: snailmail apply --plan snailmail.snailmail-plan.json --runner docker
+          IMAGE_REGISTRY: ${{ vars.VERIFICATION_IMAGE_REGISTRY || 'mirror.gcr.io' }}
+        run: |
+          set -euo pipefail
+          snailmail apply --plan snailmail.snailmail-plan.json --runner docker \
+              --image-registry "${IMAGE_REGISTRY}"
 
       - name: Assemble the site
         run: |

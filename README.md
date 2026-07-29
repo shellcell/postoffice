@@ -27,14 +27,35 @@ shellcell/snailmail  tag v0.1.2 ──► GitHub Release + SHA256SUMS
 postoffice: adopt (pins each digest) ──► plan ──► apply ──► gh-pages
 ```
 
-`bin/adopt-release.sh` reads the release's `SHA256SUMS` and adopts each asset by
-digest, routing it by what it is: `.deb` to `apt`, `.rpm` to `yum`, `.apk` to
-`alpine`, `.tgz` to `charts`, archives to `releases`. An asset type with no rule fails rather than landing somewhere
+`bin/adopt-release.sh` lists the release, reads whatever checksum file it
+publishes, and adopts each asset by digest, routing it by what it is: `.deb` to
+`apt`, `.rpm` to `yum`, `.apk` to `alpine`, `.tgz` to `charts`, archives to
+`releases`. An asset type with no rule fails rather than landing somewhere
 arbitrary.
+
+The release is listed rather than read only through its checksum file. A
+producer that publishes digests for its tarballs but not its packages would
+otherwise adopt cleanly and publish half of itself.
+
+`SHA256SUMS`, `checksums.txt` and the other common names are recognised;
+`--checksums NAME` says which to use when a release names it something else.
+
+An asset with no published digest is refused by name. Adopting it means pinning
+the bytes that run downloads rather than a digest the producer stood behind,
+which is a weaker claim about what was released — `--pin-downloads` accepts
+that, and nothing else does it silently. The publish workflow exposes the same
+choice as an input, and only on a manual run: an automatic dispatch never makes
+it for you.
 
 Adding a tool needs no change here. Give it a release workflow that produces
 conventionally named assets and dispatches `release` with its repository and tag,
 using a token with `Contents: write` on this repository (`TAP_GITHUB_TOKEN`).
+
+Archives are the one format that cannot name itself. Raw reads
+`<name>_<version>_<os>_<arch>.<ext>` out of the filename; an archive written as
+`tool-v1.2.3-linux-amd64.tar.gz` is republished under the convention so its
+architecture is recorded, and anything unrecognisable is adopted under the tool
+and version alone.
 
 ## Adopting by hand
 
@@ -44,6 +65,9 @@ git diff repos/          # review what is about to be published
 git commit -am 'adopt snailmail 0.1.2'
 git push                 # the push publishes
 ```
+
+`GH_TOKEN` is optional, and raises the anonymous API rate limit when listing the
+release.
 
 ## Where things live
 

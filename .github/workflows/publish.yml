@@ -62,7 +62,7 @@ jobs:
       # workspace already places in it through bin/adopt-release.sh.
       - name: Install snailmail
         env:
-          SNAILMAIL_VERSION: v0.0.6
+          SNAILMAIL_VERSION: v0.0.8
         run: |
           set -euo pipefail
           version=${SNAILMAIL_VERSION#v}

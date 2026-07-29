@@ -149,6 +149,37 @@ kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.0/snailmail_0.1.0-1_arm64.deb'
 
 [[package_version]]
+package = 'snailmail'
+version = '0.1.1-1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.1-1_amd64.deb'
+architecture = 'amd64'
+size = 7854974
+md5 = 'fbd63d5ae49ccc7b55b9b9865d729b3e'
+sha1 = '44c248139748b98679869cec723b78d8f5b61acf'
+sha256 = '74879fc4e9d0651e82d69c3f3f6938320971318ef5085ea1c23f6e7efe266361'
+added = '2026-07-29T11:14:56Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.1/snailmail_0.1.1-1_amd64.deb'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.1-1_arm64.deb'
+architecture = 'arm64'
+size = 7026678
+md5 = '2b31ef3de5ead06973b5361aad75a6f9'
+sha1 = '2b71c7ca0913a99f1c081e224ab39aa98675c874'
+sha256 = 'ed2e3b1e303bcd7155f8b30197b59f845bcd0b27d15dd7e057e4be9106cd334e'
+added = '2026-07-29T11:14:57Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.1/snailmail_0.1.1-1_arm64.deb'
+
+[[package_version]]
 package = 'ttysvg'
 version = '0.1.2'
 state = 'draft'
@@ -206,6 +237,12 @@ distro = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.1.0-1'
+track = 'stable'
+distro = 'stable'
+
+[[placement]]
+package = 'snailmail'
+version = '0.1.1-1'
 track = 'stable'
 distro = 'stable'
 

@@ -59,6 +59,35 @@ sha256 = '13fdf17d1512a7b6db79a50740ac1bfab133dd5e481b850187ff2a7632f94a52'
 kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.5/snailmail_0.0.5-1_arm64.deb'
 
+[[package_version]]
+package = 'snailmail'
+version = '0.0.6-1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.6-1_amd64.deb'
+architecture = 'amd64'
+size = 6160702
+md5 = '5799cf5ee34cd79c831f3be4fe2a597d'
+sha1 = 'ff73d4d190eddce8df559b9bf66a3581dd024c7e'
+sha256 = '712d69c73e8f09a7cc99b9f21c132b8e77d20c58b08ca648e66224e3ecc7d441'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.6/snailmail_0.0.6-1_amd64.deb'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.6-1_arm64.deb'
+architecture = 'arm64'
+size = 5417984
+md5 = 'b5c529f07cb4d7527947dad6b2e65d6e'
+sha1 = 'd09fe3bf53332307b78791cf8b7c589b514cff6b'
+sha256 = 'b3f5b58c8431087d3289a68c11d0394573287e7210dc67b556bb0916fe3be18f'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.6/snailmail_0.0.6-1_arm64.deb'
+
 [[placement]]
 package = 'snailmail'
 version = '0.0.3-1'
@@ -68,5 +97,11 @@ distro = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.0.5-1'
+track = 'stable'
+distro = 'stable'
+
+[[placement]]
+package = 'snailmail'
+version = '0.0.6-1'
 track = 'stable'
 distro = 'stable'

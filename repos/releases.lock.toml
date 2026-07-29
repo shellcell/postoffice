@@ -402,6 +402,76 @@ kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.1/snailmail_0.1.1_linux_arm64.tar.gz'
 
 [[package_version]]
+package = 'snailmail'
+version = '0.1.2'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.2_darwin_amd64.tar.gz'
+architecture = 'amd64'
+size = 7873394
+md5 = '9029b91b15bdeb3c4fbe06b684becc86'
+sha1 = '3b46387e292f544700b5a6c47aa43bf4f66f079f'
+sha256 = '0704062c3299ffed16f9685ceb7f04eff444bd46d1a78fc688ad1f9c4f415835'
+added = '2026-07-29T12:40:52Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.2/snailmail_0.1.2_darwin_amd64.tar.gz'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.2_freebsd_amd64.tar.gz'
+architecture = 'amd64'
+size = 7694971
+md5 = 'da95560b4c2f32cbd3416813c95daf49'
+sha1 = 'd58795d531acc579a75484a3b81164a791928d55'
+sha256 = 'ce8f4cb688cee8aadd56aad74a35bd5916f390718f3781731eed50937a5f1265'
+added = '2026-07-29T12:40:54Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.2/snailmail_0.1.2_freebsd_amd64.tar.gz'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.2_linux_amd64.tar.gz'
+architecture = 'amd64'
+size = 7768119
+md5 = 'd69af116761423d6b4e49af428a35dea'
+sha1 = '8a07a8fa6c5756cd64b56cd12ddb0a6361712c34'
+sha256 = '5ea6b412c4705cffe06aea143b45cc980bc7e39db1b0c817b2868d89f8759df8'
+added = '2026-07-29T12:40:55Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.2/snailmail_0.1.2_linux_amd64.tar.gz'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.2_darwin_arm64.tar.gz'
+architecture = 'arm64'
+size = 7184970
+md5 = '8b418ba494256aaa3aab9adc847ce3d0'
+sha1 = '43fc24761df0d0e6932ab3cd3e0415e74b39575b'
+sha256 = 'c89e27448517be38beddda884bbe2080037f89c2347fac335973b348e8ee133e'
+added = '2026-07-29T12:40:53Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.2/snailmail_0.1.2_darwin_arm64.tar.gz'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.2_linux_arm64.tar.gz'
+architecture = 'arm64'
+size = 6885287
+md5 = '960499f2f97003976f433a8dd6587121'
+sha1 = '5a03cb8b3afc166873f96768e17cd1dc000184a1'
+sha256 = '427d8de57ce11143705e2c46e9e2c0b73b28bf785bf064d2af128007cf545749'
+added = '2026-07-29T12:40:56Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.2/snailmail_0.1.2_linux_arm64.tar.gz'
+
+[[package_version]]
 package = 'ttysvg'
 version = '0.1.2'
 state = 'draft'
@@ -512,6 +582,11 @@ track = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.1.1'
+track = 'stable'
+
+[[placement]]
+package = 'snailmail'
+version = '0.1.2'
 track = 'stable'
 
 [[placement]]

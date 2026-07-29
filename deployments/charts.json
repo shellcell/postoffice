@@ -1,10 +1,10 @@
 {
   "schema_version": 2,
   "repository": "charts",
-  "plan_id": "afb7ae21ea5a704ec58ad150e6a090d59e023a4e0c313bfc0226af9b00cc648d",
-  "change_id": "charts:acbe365a8519",
-  "tree_sha256": "acbe365a8519d7599350ecde0c49ac6b3ed21e951c1eed29327654c1f4638b5f",
-  "manifest_sha256": "8fd4d1b71362766213d5ce41f5600d2d9847f97d76f285aacf18fae21781fb50",
-  "native_revision": "acbe365a8519d7599350ecde0c49ac6b3ed21e951c1eed29327654c1f4638b5f",
-  "deployed_at": "2026-07-29T12:40:56Z"
+  "plan_id": "b7080ddea7064ff33812646c6987b16b396fb612bc52cf085fbacf2174463326",
+  "change_id": "charts:b79495372b35",
+  "tree_sha256": "b79495372b352808e88277fb6d757690f9d8c83c6fd32c1d688e031ca3974be2",
+  "manifest_sha256": "6c8b152297c2f7cd86e3bb096b07a9d7f421e68264fe7f4d64aac22558410b85",
+  "native_revision": "b79495372b352808e88277fb6d757690f9d8c83c6fd32c1d688e031ca3974be2",
+  "deployed_at": "2026-07-29T14:58:24Z"
 }

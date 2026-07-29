@@ -1,0 +1,16 @@
+{
+  "schema_version": 2,
+  "repository": "alpine",
+  "plan_id": "07847000e4dbe5e3b57aa4e32bb604f76f7d60cdd1767699b5459505f292968a",
+  "change_id": "alpine:1f1f5f199f35",
+  "tree_sha256": "1f1f5f199f35c621770ac12350f84c467f68857fa9eba67869ad409737605589",
+  "manifest_sha256": "4ac08e1c00bf7ec28388ad038a3d50d7c71179d0369b3803bb869223b6c43702",
+  "native_revision": "1f1f5f199f35c621770ac12350f84c467f68857fa9eba67869ad409737605589",
+  "deployed_at": "2026-07-29T07:45:11Z",
+  "active_signing_fingerprint": "c0006940f42b2c7ea44c95f91275f5b5c1f5002f",
+  "trusted_signing_fingerprints": [
+    "c0006940f42b2c7ea44c95f91275f5b5c1f5002f"
+  ],
+  "signing_keyring_path": "keys/alpine-archive-keyring.gpg",
+  "trust_since": "2026-07-29T07:45:56Z"
+}

@@ -1,10 +1,10 @@
 {
   "schema_version": 2,
   "repository": "releases",
-  "plan_id": "3728ba6705da4f6de0f0afcc7c775e6558b5d4cc72ff8b23c498ba3f66836801",
-  "change_id": "releases:4484289c2752",
-  "tree_sha256": "4484289c2752281976fc1ea6a4237e78e54c6d6b80981061753ef161efbc9967",
-  "manifest_sha256": "3eed7deba8f51f03d09645aafec5dfe08c39cff5ee0e6cf472d645ec942f0b69",
-  "native_revision": "4484289c2752281976fc1ea6a4237e78e54c6d6b80981061753ef161efbc9967",
-  "deployed_at": "2026-07-29T07:50:13Z"
+  "plan_id": "562a3101fc96d8174c027e7b630992faa995970a17e298ac0259c6af024cf9d7",
+  "change_id": "releases:f6fdfb6ee1b7",
+  "tree_sha256": "f6fdfb6ee1b7d947701dc1e55e22704237827228ae5c8845b344c2b8631e8300",
+  "manifest_sha256": "db11398cd829d42622e0fbb98b153257c75258f7ad8892bb3f68fbc4c3ec04eb",
+  "native_revision": "f6fdfb6ee1b7d947701dc1e55e22704237827228ae5c8845b344c2b8631e8300",
+  "deployed_at": "2026-07-29T08:35:27Z"
 }

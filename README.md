@@ -7,6 +7,8 @@ Every shellcell package repository, published to <https://dl.shellcell.dev> with
 |---|---|---|---|
 | `releases` | raw | release binaries for every tool and platform | `dl.shellcell.dev/releases/` |
 | `apt` | deb | `apt-get install` for Debian and Ubuntu | `dl.shellcell.dev/apt/` |
+| `yum` | rpm | `dnf install` for Fedora and RHEL | `dl.shellcell.dev/yum/` |
+| `alpine` | apk | `apk add` for Alpine | `dl.shellcell.dev/alpine/` |
 | `charts` | helm | Helm charts | `dl.shellcell.dev/charts/` |
 
 One repository per *format*, not per tool: raw publishes to
@@ -26,8 +28,8 @@ postoffice: adopt (pins each digest) ──► plan ──► apply ──► gh
 ```
 
 `bin/adopt-release.sh` reads the release's `SHA256SUMS` and adopts each asset by
-digest, routing it by what it is: `.deb` to `apt`, `.tgz` to `charts`, archives
-to `releases`. An asset type with no rule fails rather than landing somewhere
+digest, routing it by what it is: `.deb` to `apt`, `.rpm` to `yum`, `.apk` to
+`alpine`, `.tgz` to `charts`, archives to `releases`. An asset type with no rule fails rather than landing somewhere
 arbitrary.
 
 Adding a tool needs no change here. Give it a release workflow that produces
@@ -84,7 +86,14 @@ Publishing needs three settings on this repository:
 |---|---|
 | `vars.SNAILMAIL_SIGNING_KEY_REF` | `53b4b8e5c2289f98d8b4b7537f94ae3facbb03934dc5363e4608bd27703c2837/archive-signing` |
 | `secrets.SNAILMAIL_SIGNING_PRIVATE_KEY` | contents of that `.asc` private key file |
-| `secrets.SNAILMAIL_KEY_PASSPHRASE` | the passphrase, at least 24 bytes |
+| `vars.SNAILMAIL_APK_KEY_REF` | `53b4b8e5…/alpine-signing` |
+| `secrets.SNAILMAIL_APK_PRIVATE_KEY` | contents of that `.asc` private key file |
+| `secrets.SNAILMAIL_KEY_PASSPHRASE` | the passphrase, at least 24 bytes; one covers the store |
+
+`apt` and `yum` share the OpenPGP key: both verify OpenPGP, so one key serves
+them. `alpine` cannot — apk verifies a bare RSA key it holds by filename and can
+check no other — so it has its own, and `keys attach` refuses the wrong kind
+rather than letting it fail later at publication.
 
 Locally, export `SNAILMAIL_KEY_PASSPHRASE` before `plan` or `apply`; without it
 they refuse to run rather than publish something unsigned.

@@ -8,6 +8,21 @@ id = '53b4b8e5c2289f98d8b4b7537f94ae3facbb03934dc5363e4608bd27703c2837'
 type = 'local'
 
 [key]
+[key.alpine-signing]
+algorithm = 'apk-rsa4096'
+usage = 'sign'
+fingerprint = 'c0006940f42b2c7ea44c95f91275f5b5c1f5002f'
+created_at = '2026-07-29T07:41:50Z'
+expires_at = '2028-07-28T07:41:50Z'
+public_key = 'keys/alpine-signing.rsa.pub'
+public_key_sha256 = '8f9d1c0bf08a6d186d1ae2add17c12883f0014d457826385452b6d9e512ab5b6'
+public_armor = 'keys/alpine-signing.rsa.pub'
+public_armor_sha256 = '8f9d1c0bf08a6d186d1ae2add17c12883f0014d457826385452b6d9e512ab5b6'
+
+[key.alpine-signing.ref]
+backend = 'file'
+id = '53b4b8e5c2289f98d8b4b7537f94ae3facbb03934dc5363e4608bd27703c2837/alpine-signing'
+
 [key.archive-signing]
 algorithm = 'openpgp-rsa4096'
 usage = 'sign'
@@ -24,6 +39,20 @@ backend = 'file'
 id = '53b4b8e5c2289f98d8b4b7537f94ae3facbb03934dc5363e4608bd27703c2837/archive-signing'
 
 [repo]
+[repo.alpine]
+format = 'apk'
+lock = 'repos/alpine.lock.toml'
+visibility = 'public'
+gate = 'auto'
+signing_keys = ['alpine-signing']
+signing_keyring = 'keys/alpine-archive-keyring.gpg'
+track = 'stable'
+architectures = ['x86_64', 'aarch64']
+
+[repo.alpine.host]
+type = 'local'
+path = 'docs/alpine'
+
 [repo.apt]
 format = 'deb'
 lock = 'repos/apt.lock.toml'
@@ -61,3 +90,16 @@ track = 'stable'
 [repo.releases.host]
 type = 'local'
 path = 'docs/releases'
+
+[repo.yum]
+format = 'rpm'
+lock = 'repos/yum.lock.toml'
+visibility = 'public'
+gate = 'auto'
+signing_keys = ['archive-signing']
+signing_keyring = 'keys/yum-archive-keyring.gpg'
+track = 'stable'
+
+[repo.yum.host]
+type = 'local'
+path = 'docs/yum'

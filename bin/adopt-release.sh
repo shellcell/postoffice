@@ -62,6 +62,8 @@ while read -r digest name; do
     # asset type fails here rather than landing somewhere arbitrary.
     case "$name" in
         *.deb) target=apt ;;
+        *.rpm) target=yum ;;
+        *.apk) target=alpine ;;
         *.tgz) target=charts ;;
         *.tar.gz|*.tar.xz|*.tar.zst|*.tar.bz2|*.zip) target=releases ;;
         *)

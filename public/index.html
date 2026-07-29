@@ -47,6 +47,30 @@ sudo apt-get install snailmail</code></pre>
 <p>The <code>signed-by</code> keyring scopes that key to this repository alone,
 so it can never vouch for anything else on your system.</p>
 
+<h2>Fedora and RHEL</h2>
+<pre><code>sudo tee /etc/yum.repos.d/shellcell.repo &gt;/dev/null &lt;&lt;'REPO'
+[shellcell]
+name=shellcell
+baseurl=https://dl.shellcell.dev/yum
+enabled=1
+repo_gpgcheck=1
+gpgcheck=0
+gpgkey=https://dl.shellcell.dev/yum/keys/yum-archive-keyring.asc
+REPO
+sudo dnf install snailmail</code></pre>
+<p><code>repo_gpgcheck</code> verifies the signature over the repository
+metadata. <code>gpgcheck</code> is off because the packages themselves are not
+signed — that signature is made by whoever builds a package, not by the
+repository.</p>
+
+<h2>Alpine</h2>
+<pre><code>sudo curl -fsSL -o /etc/apk/keys/alpine-signing.rsa.pub \
+  https://dl.shellcell.dev/alpine/keys/alpine-signing.rsa.pub
+echo https://dl.shellcell.dev/alpine | sudo tee -a /etc/apk/repositories
+sudo apk add snailmail</code></pre>
+<p>apk finds the key by filename alone, so it must be installed under exactly
+that name before the repository can be used.</p>
+
 <h2>Helm</h2>
 <pre><code>helm repo add shellcell https://dl.shellcell.dev/charts
 helm repo update</code></pre>

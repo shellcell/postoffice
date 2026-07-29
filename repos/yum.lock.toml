@@ -1,0 +1,4 @@
+schema_version = 2
+repository = 'yum'
+package_version = []
+placement = []

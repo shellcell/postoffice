@@ -1,4 +1,36 @@
 schema_version = 2
 repository = 'yum'
-package_version = []
-placement = []
+
+[[package_version]]
+package = 'snailmail'
+version = '0.0.9-1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail-0.0.9-1.aarch64.rpm'
+architecture = 'aarch64'
+size = 7207181
+md5 = '136785c91160e397d21ddbd51f7f6cd4'
+sha1 = 'b91468214595131a1a1348ba146553eea8407c1b'
+sha256 = '4739ce4d1f3719b2def08c05a526527016c2fa1c9ae22d39faa90e05ac216f5e'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.9/snailmail-0.0.9-1.aarch64.rpm'
+
+[[package_version.blob]]
+filename = 'snailmail-0.0.9-1.x86_64.rpm'
+architecture = 'x86_64'
+size = 8113009
+md5 = '5e63d5b51f2e938321ed422d5958b5ad'
+sha1 = '03399da20ec1b18989b8b83b9a0ad7769ae07a25'
+sha256 = 'e560a18cd76c7a335b6488a2da3abe856573b0d90cef66bfeffd5e0910417c9a'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.9/snailmail-0.0.9-1.x86_64.rpm'
+
+[[placement]]
+package = 'snailmail'
+version = '0.0.9-1'
+track = 'stable'

@@ -1,4 +1,36 @@
 schema_version = 2
 repository = 'alpine'
-package_version = []
-placement = []
+
+[[package_version]]
+package = 'snailmail'
+version = '0.0.9-r1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.9-r1_aarch64.apk'
+architecture = 'aarch64'
+size = 7205576
+md5 = 'b36e61fb8f5d7cdc91aa60ff50934f30'
+sha1 = 'c4fb8f78c84eb717197f5ce0f0be15d4cdbd052b'
+sha256 = 'a9779a91cd6b54c0aae5b6135dc1bb24fc8cb8c653d0e475d7924b8f0474ba75'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.9/snailmail_0.0.9-r1_aarch64.apk'
+
+[[package_version.blob]]
+filename = 'snailmail_0.0.9-r1_x86_64.apk'
+architecture = 'x86_64'
+size = 8112482
+md5 = 'be72d68a87a4b1881d66caa732fe80c3'
+sha1 = '6164985d6f90cdc39c089119002a5894595921b6'
+sha256 = 'fd44a4dbe446f78b99104fb8fd1b5dd60c928d7e0a4891b17dc0978edbbba98c'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.0.9/snailmail_0.0.9-r1_x86_64.apk'
+
+[[placement]]
+package = 'snailmail'
+version = '0.0.9-r1'
+track = 'stable'

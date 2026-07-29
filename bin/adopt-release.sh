@@ -41,13 +41,45 @@ echo "==> reading ${download}/SHA256SUMS"
 curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
     --max-time 120 --output "$scratch/SHA256SUMS" "${download}/SHA256SUMS"
 
-adopted=0
+# repositoryFor decides where an artifact belongs, or reports that it is not a
+# package at all.
+#
+# A release carries more than packages — checksums, signatures, SBOMs,
+# provenance — and those are not failures, they are simply not ours. An artifact
+# this workspace could serve but has nowhere to put is a different thing: that
+# is a repository someone meant to configure and did not.
+repositoryFor() {
+    case "$1" in
+        *.deb) echo apt ;;
+        *.rpm) echo yum ;;
+        *.apk) echo alpine ;;
+        *.tgz) echo charts ;;
+        *.tar.gz|*.tar.xz|*.tar.zst|*.tar.bz2|*.zip) echo releases ;;
+        *) echo "" ;;
+    esac
+}
+
+configured() {
+    grep -q "^\[repo\.$1\]" snailmail.toml
+}
+
+# Everything is classified before anything is adopted, so a missing repository
+# stops the run while the workspace is still untouched rather than half way
+# through it.
+plan="$scratch/plan"
+: > "$plan"
+missing=""
+skipped=0
 while read -r digest name; do
-    # sha256sum writes "<digest>  ./<name>"; drop the leading marker.
     name=${name#\*}
     name=${name#./}
     case "$name" in
-        ''|SHA256SUMS) continue ;;
+        ''|SHA256SUMS|*.sig|*.asc|*.pem|*.sbom.json|*.spdx.json|*.cdx.json|*.intoto.jsonl)
+            [ -n "$name" ] && [ "$name" != SHA256SUMS ] && {
+                echo "    not a package, leaving alone: $name"
+                skipped=$((skipped + 1))
+            }
+            continue ;;
     esac
     case "$digest" in
         [0-9a-f]*) ;;
@@ -58,26 +90,37 @@ while read -r digest name; do
         exit 1
     fi
 
-    # Which repository serves an artifact is decided by what it is, so a new
-    # asset type fails here rather than landing somewhere arbitrary.
-    case "$name" in
-        *.deb) target=apt ;;
-        *.rpm) target=yum ;;
-        *.apk) target=alpine ;;
-        *.tgz) target=charts ;;
-        *.tar.gz|*.tar.xz|*.tar.zst|*.tar.bz2|*.zip) target=releases ;;
-        *)
-            echo "$0: no repository serves '$name'; add a rule to $0" >&2
-            exit 1 ;;
-    esac
+    target=$(repositoryFor "$name")
+    if [ -z "$target" ]; then
+        echo "    unrecognised, leaving alone: $name"
+        skipped=$((skipped + 1))
+        continue
+    fi
+    if ! configured "$target"; then
+        missing="${missing}  ${name} needs a '${target}' repository"$'\n'
+        continue
+    fi
+    printf '%s %s %s\n' "$digest" "$target" "$name" >> "$plan"
+done < "$scratch/SHA256SUMS"
 
+if [ -n "$missing" ]; then
+    {
+        echo "$0: this release carries packages with nowhere to go:"
+        printf '%s' "$missing"
+        echo "configure them with 'snailmail setup', or nothing will publish them."
+    } >&2
+    exit 1
+fi
+
+adopted=0
+while read -r digest target name; do
     echo "==> adopt ${target}: ${name}"
     "$snailmail" adopt --sha256 "$digest" --public-origin "$target" "${download}/${name}"
     adopted=$((adopted + 1))
-done < "$scratch/SHA256SUMS"
+done < "$plan"
 
 if [ "$adopted" -eq 0 ]; then
-    echo "$0: SHA256SUMS listed no adoptable assets" >&2
+    echo "$0: SHA256SUMS listed no adoptable packages" >&2
     exit 1
 fi
-echo "==> adopted ${adopted} artifacts from ${repository} ${tag}"
+echo "==> adopted ${adopted} artifacts from ${repository} ${tag} (${skipped} left alone)"

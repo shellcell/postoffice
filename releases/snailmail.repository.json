@@ -1,0 +1,319 @@
+{
+  "schema_version": 3,
+  "format": "raw/v1",
+  "generated_at": "2026-07-30T21:44:03Z",
+  "tree_sha256": "a5edfbad2cc78392998bc85540130773570e4980117be933e64a10732a4cccbe",
+  "files": [
+    {
+      "path": "SHA256SUMS",
+      "size": 5965,
+      "sha256": "32136a48901fc1c444e74ef84def1277a2732558b84dba8305990a6170b3ff63"
+    },
+    {
+      "path": "index.html",
+      "size": 59922,
+      "sha256": "23eeda8c55e9e00397bea3e36c92e3a60826bedf680825400514ad7b4941aec0"
+    },
+    {
+      "path": "snailmail/0.0.3/snailmail_0.0.3_darwin_amd64.tar.gz",
+      "size": 7702417,
+      "sha256": "b6129231f07f2e9b19efa65fe96279cd965ea8958b28f69fbee22b3000048cba"
+    },
+    {
+      "path": "snailmail/0.0.3/snailmail_0.0.3_darwin_arm64.tar.gz",
+      "size": 7033798,
+      "sha256": "731839970f0721e02f6ebd04a86624cccfa39954c530c84aedb0aa8919369ced"
+    },
+    {
+      "path": "snailmail/0.0.3/snailmail_0.0.3_freebsd_amd64.tar.gz",
+      "size": 7529155,
+      "sha256": "96c9d4f1271cb5482ed7c8400c834fe1bd7107bbad99857c996cb7b1370cf37a"
+    },
+    {
+      "path": "snailmail/0.0.3/snailmail_0.0.3_linux_amd64.tar.gz",
+      "size": 7599387,
+      "sha256": "288ffbf00fec6ed630e99c804ef69441bd83ac6cf9ee29663f9886def613e8ac"
+    },
+    {
+      "path": "snailmail/0.0.3/snailmail_0.0.3_linux_arm64.tar.gz",
+      "size": 6733834,
+      "sha256": "ae0676e09fb158fd6a9c9b1b3cdd98358f29b42f7d2fd0dba82d3da276e107a2"
+    },
+    {
+      "path": "snailmail/0.0.5/snailmail_0.0.5_darwin_amd64.tar.gz",
+      "size": 7782226,
+      "sha256": "80470ccde25c1572f1557ccfe97d5a21c9e05d057fe1e1a0c44e22f68328fc01"
+    },
+    {
+      "path": "snailmail/0.0.5/snailmail_0.0.5_darwin_arm64.tar.gz",
+      "size": 7106189,
+      "sha256": "2472b8bceb9732e4e6d9920fbfa329f3cbba473b85a0b9591ab846621540a3e4"
+    },
+    {
+      "path": "snailmail/0.0.5/snailmail_0.0.5_freebsd_amd64.tar.gz",
+      "size": 7606831,
+      "sha256": "75be721d634d391789be46f962c94f4b5eb5f3ae89f24d6c8cf94b9148a7230e"
+    },
+    {
+      "path": "snailmail/0.0.5/snailmail_0.0.5_linux_amd64.tar.gz",
+      "size": 7677328,
+      "sha256": "1727128648471fb0282a1e546a8345dba27bd8e8b2d864ee4b1fa220106df69c"
+    },
+    {
+      "path": "snailmail/0.0.5/snailmail_0.0.5_linux_arm64.tar.gz",
+      "size": 6804089,
+      "sha256": "16e6b8dc94616d239ab4f9888386c04bcd3f362a5b44ffbc48d75a1462ebe40e"
+    },
+    {
+      "path": "snailmail/0.0.6/snailmail_0.0.6_darwin_amd64.tar.gz",
+      "size": 7819337,
+      "sha256": "472104ea0faca501cb37665761a57b523d32fcb7a4154bf7e3a4c1e7ca367416"
+    },
+    {
+      "path": "snailmail/0.0.6/snailmail_0.0.6_darwin_arm64.tar.gz",
+      "size": 7137327,
+      "sha256": "811b0ec4f36f47f46eac41d5aab6473703af18643864ece011d21105b98c02f4"
+    },
+    {
+      "path": "snailmail/0.0.6/snailmail_0.0.6_freebsd_amd64.tar.gz",
+      "size": 7641629,
+      "sha256": "10f66f35f5d31a9860a73307b0bac669515a4460247249cf89fc46b7208fdd8b"
+    },
+    {
+      "path": "snailmail/0.0.6/snailmail_0.0.6_linux_amd64.tar.gz",
+      "size": 7713771,
+      "sha256": "fa5517ff530dae013d33aec1e2d6743405bcbcf0b6ebb52c6a41630330add78b"
+    },
+    {
+      "path": "snailmail/0.0.6/snailmail_0.0.6_linux_arm64.tar.gz",
+      "size": 6835555,
+      "sha256": "edc0af6a679ac54c9186086d5e39752c1fe03b8356211082ddea6f3164b8d708"
+    },
+    {
+      "path": "snailmail/0.0.9/snailmail_0.0.9_darwin_amd64.tar.gz",
+      "size": 7832904,
+      "sha256": "2a64a6a1ab9e8d2a2e83bad02381db30e09ec312b70f18b95ee2eded0c0720bd"
+    },
+    {
+      "path": "snailmail/0.0.9/snailmail_0.0.9_darwin_arm64.tar.gz",
+      "size": 7150167,
+      "sha256": "8472252e16c7630a23fbaa6c43f534d9c906adf08c00d94ad939d4d3930ef526"
+    },
+    {
+      "path": "snailmail/0.0.9/snailmail_0.0.9_freebsd_amd64.tar.gz",
+      "size": 7656201,
+      "sha256": "aad0f028fc7bdb356a50b2954a2096b10a8217e317806d111ee96ecd94d96cab"
+    },
+    {
+      "path": "snailmail/0.0.9/snailmail_0.0.9_linux_amd64.tar.gz",
+      "size": 7727953,
+      "sha256": "a5a721c545da3c1c33ecaa2f56c5a4d370ef2e4175fcb12781486cf98b089612"
+    },
+    {
+      "path": "snailmail/0.0.9/snailmail_0.0.9_linux_arm64.tar.gz",
+      "size": 6850389,
+      "sha256": "c226341d63b471c7e8cf025bfcad704660caab18b8e12d7bb2557bb36ab40a12"
+    },
+    {
+      "path": "snailmail/0.1.0/snailmail_0.1.0_darwin_amd64.tar.gz",
+      "size": 7844281,
+      "sha256": "358d32feb107f85f70a72d8a09b59791e03ea157ae809aef332cfc35af2a8f2d"
+    },
+    {
+      "path": "snailmail/0.1.0/snailmail_0.1.0_darwin_arm64.tar.gz",
+      "size": 7162842,
+      "sha256": "a8175cf894b83e9378bc327798955bbf12a6f2e03d9d03f3add954adee423752"
+    },
+    {
+      "path": "snailmail/0.1.0/snailmail_0.1.0_freebsd_amd64.tar.gz",
+      "size": 7669345,
+      "sha256": "c6fe249e09b9b822287dc2afa6b7ab9c19e5cddc4fddeb3f001bec7903c306be"
+    },
+    {
+      "path": "snailmail/0.1.0/snailmail_0.1.0_linux_amd64.tar.gz",
+      "size": 7739918,
+      "sha256": "439a52fec1a1bd616a3c1758e1b92ed6b8d8d4f3a07939e845d85627e74b45d1"
+    },
+    {
+      "path": "snailmail/0.1.0/snailmail_0.1.0_linux_arm64.tar.gz",
+      "size": 6861913,
+      "sha256": "37c1e252c562926457484e945efdfce7101fccd7a60814b6462e9d75a8a271a5"
+    },
+    {
+      "path": "snailmail/0.1.1/snailmail_0.1.1_darwin_amd64.tar.gz",
+      "size": 7851460,
+      "sha256": "e99d41d8544e08048a125dff4b6fd6d6c3cb79351ee01d3b2e938e7c32a5f745"
+    },
+    {
+      "path": "snailmail/0.1.1/snailmail_0.1.1_darwin_arm64.tar.gz",
+      "size": 7168662,
+      "sha256": "ec8b38730e2c9d28196c4806ebe723138460b6bb32923ea3d571ed910b953ecd"
+    },
+    {
+      "path": "snailmail/0.1.1/snailmail_0.1.1_freebsd_amd64.tar.gz",
+      "size": 7674569,
+      "sha256": "aac888872f43bd6c07dcdbea485e905517519d5cfe7c74453773d33c1b4b3011"
+    },
+    {
+      "path": "snailmail/0.1.1/snailmail_0.1.1_linux_amd64.tar.gz",
+      "size": 7745949,
+      "sha256": "b2c44210fe8d592382d8e48538f66616ec358d2b2208cd130b47c1b1ecb4af0a"
+    },
+    {
+      "path": "snailmail/0.1.1/snailmail_0.1.1_linux_arm64.tar.gz",
+      "size": 6864929,
+      "sha256": "aa7b8968fc3136d0a3b29e7efc2a72dd9db543baf922959812b1a5c8e6bc6fcb"
+    },
+    {
+      "path": "snailmail/0.1.2/snailmail_0.1.2_darwin_amd64.tar.gz",
+      "size": 7873394,
+      "sha256": "0704062c3299ffed16f9685ceb7f04eff444bd46d1a78fc688ad1f9c4f415835"
+    },
+    {
+      "path": "snailmail/0.1.2/snailmail_0.1.2_darwin_arm64.tar.gz",
+      "size": 7184970,
+      "sha256": "c89e27448517be38beddda884bbe2080037f89c2347fac335973b348e8ee133e"
+    },
+    {
+      "path": "snailmail/0.1.2/snailmail_0.1.2_freebsd_amd64.tar.gz",
+      "size": 7694971,
+      "sha256": "ce8f4cb688cee8aadd56aad74a35bd5916f390718f3781731eed50937a5f1265"
+    },
+    {
+      "path": "snailmail/0.1.2/snailmail_0.1.2_linux_amd64.tar.gz",
+      "size": 7768119,
+      "sha256": "5ea6b412c4705cffe06aea143b45cc980bc7e39db1b0c817b2868d89f8759df8"
+    },
+    {
+      "path": "snailmail/0.1.2/snailmail_0.1.2_linux_arm64.tar.gz",
+      "size": 6885287,
+      "sha256": "427d8de57ce11143705e2c46e9e2c0b73b28bf785bf064d2af128007cf545749"
+    },
+    {
+      "path": "snailmail/0.1.3/snailmail_0.1.3_darwin_amd64.tar.gz",
+      "size": 7882189,
+      "sha256": "9ccb8e65f2a01249421f3193918231225b23304d735fee1262373ec4db5b31fb"
+    },
+    {
+      "path": "snailmail/0.1.3/snailmail_0.1.3_darwin_arm64.tar.gz",
+      "size": 7195869,
+      "sha256": "5cc7f76813a7e3c77a474adc215270dc692251cd3d19cc7c3d4b0e9dbefeee63"
+    },
+    {
+      "path": "snailmail/0.1.3/snailmail_0.1.3_freebsd_amd64.tar.gz",
+      "size": 7703670,
+      "sha256": "09be10cb2c2a0ba7ab0cf5c281b9573077a404c1246ff01adb52bebebd460fcb"
+    },
+    {
+      "path": "snailmail/0.1.3/snailmail_0.1.3_linux_amd64.tar.gz",
+      "size": 7777916,
+      "sha256": "b00f1e04735c7d9c604e16ad37e606b18bdd02def7dfed9a92bca606b5b38e71"
+    },
+    {
+      "path": "snailmail/0.1.3/snailmail_0.1.3_linux_arm64.tar.gz",
+      "size": 6894980,
+      "sha256": "b8e476274d65a4e3c35407ee6781901500d0e601f5e32d122b87abe8c621fa1f"
+    },
+    {
+      "path": "snailmail/0.1.4/snailmail_0.1.4_darwin_amd64.tar.gz",
+      "size": 8023538,
+      "sha256": "16a9c729686b1e63404bed501e7e88ed44cec7097b50aaa95f7e83b7ca0702eb"
+    },
+    {
+      "path": "snailmail/0.1.4/snailmail_0.1.4_darwin_arm64.tar.gz",
+      "size": 7330268,
+      "sha256": "8a0cbb98de38b5356ebb638e2593332f69f3b4dbd0ab3b779f8e2da060861f6b"
+    },
+    {
+      "path": "snailmail/0.1.4/snailmail_0.1.4_freebsd_amd64.tar.gz",
+      "size": 7846625,
+      "sha256": "2f3273db36e6e94157bd67182c652035477f735cd1a7f8dcbf279a607202a560"
+    },
+    {
+      "path": "snailmail/0.1.4/snailmail_0.1.4_linux_amd64.tar.gz",
+      "size": 7878481,
+      "sha256": "95e2b4fbd9cdf2a613893454010cfeb1947e9a56509d502cfd0ae5c203955913"
+    },
+    {
+      "path": "snailmail/0.1.4/snailmail_0.1.4_linux_arm64.tar.gz",
+      "size": 7023209,
+      "sha256": "b9bd5cda57adac7c6e996e20968697e3e0aaa714a12d2f8b8e1d915233db7594"
+    },
+    {
+      "path": "ttysvg/0.1.2/ttysvg_0.1.2_darwin_amd64.tar.gz",
+      "size": 1305014,
+      "sha256": "9439d2ce75c180fdcaa3cdb1e262526525d3762afa7ddf250373c9cff8c0ab5a"
+    },
+    {
+      "path": "ttysvg/0.1.2/ttysvg_0.1.2_darwin_arm64.tar.gz",
+      "size": 1209327,
+      "sha256": "122f23c3e7ab1e829927062ae92261ed4c8d82b2104e1d2de3be433b66c62ca7"
+    },
+    {
+      "path": "ttysvg/0.1.2/ttysvg_0.1.2_linux_386.tar.gz",
+      "size": 1244819,
+      "sha256": "03c6c86f7af044e43cf4dc8f2603d78704cf07dbc406b0f7eb2d74f006770ce0"
+    },
+    {
+      "path": "ttysvg/0.1.2/ttysvg_0.1.2_linux_amd64.tar.gz",
+      "size": 1316747,
+      "sha256": "879c0e74357fc71673c7aa99570a41731d81d44d8b3476d93a3d23bd2716bd1f"
+    },
+    {
+      "path": "ttysvg/0.1.2/ttysvg_0.1.2_linux_arm.tar.gz",
+      "size": 1222951,
+      "sha256": "c5c4b20bfd8201d665e56e251a8f3fe38409b485cee569b04e2a477cc7da14eb"
+    },
+    {
+      "path": "ttysvg/0.1.2/ttysvg_0.1.2_linux_arm64.tar.gz",
+      "size": 1195425,
+      "sha256": "83ec4c913e2339efdc7d02034be360cbbe46b4794678533c0d15b545152beebe"
+    }
+  ],
+  "install": {
+    "kind": "raw",
+    "index_path": "SHA256SUMS"
+  },
+  "verification_cases": [
+    {
+      "project": "snailmail",
+      "version": "0.0.3"
+    },
+    {
+      "project": "snailmail",
+      "version": "0.0.5"
+    },
+    {
+      "project": "snailmail",
+      "version": "0.0.6"
+    },
+    {
+      "project": "snailmail",
+      "version": "0.0.9"
+    },
+    {
+      "project": "snailmail",
+      "version": "0.1.0"
+    },
+    {
+      "project": "snailmail",
+      "version": "0.1.1"
+    },
+    {
+      "project": "snailmail",
+      "version": "0.1.2"
+    },
+    {
+      "project": "snailmail",
+      "version": "0.1.3"
+    },
+    {
+      "project": "snailmail",
+      "version": "0.1.4"
+    },
+    {
+      "project": "ttysvg",
+      "version": "0.1.2"
+    }
+  ]
+}

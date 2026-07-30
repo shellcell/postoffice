@@ -1,0 +1,297 @@
+{
+  "schema_version": 3,
+  "format": "deb/v1",
+  "generated_at": "2026-07-30T21:44:03Z",
+  "tree_sha256": "ba1341afee6adc2f7a8fe38b8bb2a24a193a3d5fe4685a846d238b7868b53c1a",
+  "files": [
+    {
+      "path": "dists/stable/InRelease",
+      "size": 2508,
+      "sha256": "e45df365f080198ab4f4cd38916d0bc9300d2bd4bdea76fc0fee00011413221c"
+    },
+    {
+      "path": "dists/stable/Release",
+      "size": 1632,
+      "sha256": "bd0cff9d065782409be0d6d9e2f73d30dabeb04c778568033e65a04fa1bfda63"
+    },
+    {
+      "path": "dists/stable/Release.gpg",
+      "size": 832,
+      "sha256": "09f1d831c1e7e9e99c813331d856eac383195d8ffd8c06e2c0657f7a1a406019"
+    },
+    {
+      "path": "dists/stable/main/binary-amd64/Packages",
+      "size": 5741,
+      "sha256": "5f69598d6f1ff36451b439e027cfe12a1511efba596740f19490f4f60512e5eb"
+    },
+    {
+      "path": "dists/stable/main/binary-amd64/Packages.gz",
+      "size": 1545,
+      "sha256": "f840be1e3513c38befb562e52835cd3d67188fb699cb9d3b45eda74694d3c18a"
+    },
+    {
+      "path": "dists/stable/main/binary-amd64/Release",
+      "size": 87,
+      "sha256": "c0933a3774088b00a4ac58ef830925e7a74f45479b35978e308d82a333694160"
+    },
+    {
+      "path": "dists/stable/main/binary-arm64/Packages",
+      "size": 5741,
+      "sha256": "86fb69f24cab964861ccb2277e5f735ff83d46b04c52f2df75c08a6855dbcc3a"
+    },
+    {
+      "path": "dists/stable/main/binary-arm64/Packages.gz",
+      "size": 1537,
+      "sha256": "7ddbd254f5220d16753fe090e34666f2353c700712c566eccc08eb4d37659c89"
+    },
+    {
+      "path": "dists/stable/main/binary-arm64/Release",
+      "size": 87,
+      "sha256": "eb8e7d8bf191cb3249326b4ba05195523c0f6017b03aed0183611c224c6fee7e"
+    },
+    {
+      "path": "index.html",
+      "size": 32615,
+      "sha256": "21e373c73d517603f20b6867e539fa3748ca00adf1ab054a640b28225c16f6c2"
+    },
+    {
+      "path": "keys/archive-signing.gpg",
+      "size": 2264,
+      "sha256": "7ee8e8b709c85c7de020bac4ebf0d9e1e5369f8c6c0d80da8b551844a44fcd7a"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.0.3-1_amd64.deb",
+      "size": 6071936,
+      "sha256": "611a4dd5c98f61c90a4e7b73f0f958b3751dd37a59efc10c131ef65dbd8d560d"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.0.3-1_arm64.deb",
+      "size": 5339914,
+      "sha256": "7963ba3b968e977c49d6f69cbde0b97f7ad480d20ba04be09e71b3bb8befd6a1"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.0.5-1_amd64.deb",
+      "size": 6131920,
+      "sha256": "4409e7b62692fe50b8766284921a7e12a380cc52a05e55c549eceeb80c2948d8"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.0.5-1_arm64.deb",
+      "size": 5393304,
+      "sha256": "13fdf17d1512a7b6db79a50740ac1bfab133dd5e481b850187ff2a7632f94a52"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.0.6-1_amd64.deb",
+      "size": 6160702,
+      "sha256": "712d69c73e8f09a7cc99b9f21c132b8e77d20c58b08ca648e66224e3ecc7d441"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.0.6-1_arm64.deb",
+      "size": 5417984,
+      "sha256": "b3f5b58c8431087d3289a68c11d0394573287e7210dc67b556bb0916fe3be18f"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.0.9-1_amd64.deb",
+      "size": 7836236,
+      "sha256": "4450aac00ce03985c80b54ef24e78aa8d2a0f7f8120b381af89700cd9ff873f6"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.0.9-1_arm64.deb",
+      "size": 7009540,
+      "sha256": "8f913f9f4f5d216c89a8e3e8363bbae85dc460518e68c4bafda1d7f81b3dcddc"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.0-1_amd64.deb",
+      "size": 7852920,
+      "sha256": "83ad6a6851bd6eaf7e020cfb82afe101056070f2c1882c894d14d70f38541f3d"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.0-1_arm64.deb",
+      "size": 7021598,
+      "sha256": "3a0ed97f86de3d4b0bdea1068c35f440c8413a8830b785f79d718f49855bcebe"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.1-1_amd64.deb",
+      "size": 7854974,
+      "sha256": "74879fc4e9d0651e82d69c3f3f6938320971318ef5085ea1c23f6e7efe266361"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.1-1_arm64.deb",
+      "size": 7026678,
+      "sha256": "ed2e3b1e303bcd7155f8b30197b59f845bcd0b27d15dd7e057e4be9106cd334e"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.2-1_amd64.deb",
+      "size": 7877432,
+      "sha256": "dd0e56d3868f3dca70c7b28de9d61a413cb5a858e0c61788914452c4d56239f1"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.2-1_arm64.deb",
+      "size": 7045802,
+      "sha256": "f84b5f636dce9aecb5cdc4f3c26c89dbe36fc661be5f7afec07f1569ca88d3c7"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.3-1_amd64.deb",
+      "size": 7887752,
+      "sha256": "faf41fec4f9182637891827285297c23ae35d10a360442db7f309bfc44eb7d39"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.3-1_arm64.deb",
+      "size": 7055844,
+      "sha256": "4c9b7ed46720ecaa3ab22e959259790801178ad9c9b445cb043e23c142eeeded"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.4-1_amd64.deb",
+      "size": 7987240,
+      "sha256": "5beede6d126296e8fea9261c8ae4eada0e80b6045ceef69980294e1383f937fa"
+    },
+    {
+      "path": "pool/main/s/snailmail/snailmail_0.1.4-1_arm64.deb",
+      "size": 7186922,
+      "sha256": "83ce669449c7de217b9a55d3ff5a999cf2a45dc1dbbc0ea961eb4c058704c301"
+    },
+    {
+      "path": "pool/main/t/ttysvg/ttysvg_0.1.2_amd64.deb",
+      "size": 1332908,
+      "sha256": "edd5bc14e13678e9064adceba0dffcfa10fb34709d969ddafa11579460a0f784"
+    },
+    {
+      "path": "pool/main/t/ttysvg/ttysvg_0.1.2_arm64.deb",
+      "size": 1217650,
+      "sha256": "79ebe7624ed63a4db156c8d7215648ac46fc1532f686f5371ce24d5de8728731"
+    }
+  ],
+  "install": {
+    "kind": "deb",
+    "suite": "stable",
+    "component": "main",
+    "architectures": [
+      "amd64",
+      "arm64"
+    ],
+    "signing_key_path": "keys/archive-signing.gpg",
+    "signing_fingerprint": "1e00d64dcafdff06dc70acefdf1c620e53596d7f",
+    "trusted_signing_fingerprints": [
+      "1e00d64dcafdff06dc70acefdf1c620e53596d7f"
+    ]
+  },
+  "verification_cases": [
+    {
+      "package": "snailmail",
+      "version": "0.0.3-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.0.3-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.0.5-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.0.5-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.0.6-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.0.6-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.0.9-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.0.9-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.0-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.0-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.1-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.1-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.2-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.2-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.3-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.3-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.4-1",
+      "architecture": "amd64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.4-1",
+      "architecture": "arm64"
+    },
+    {
+      "package": "ttysvg",
+      "version": "0.1.2",
+      "architecture": "amd64"
+    },
+    {
+      "package": "ttysvg",
+      "version": "0.1.2",
+      "architecture": "arm64"
+    }
+  ],
+  "signatures": [
+    {
+      "path": "dists/stable/InRelease",
+      "scheme": "openpgp-cleartext-v4",
+      "fingerprint": "1e00d64dcafdff06dc70acefdf1c620e53596d7f",
+      "payload_sha256": "bd0cff9d065782409be0d6d9e2f73d30dabeb04c778568033e65a04fa1bfda63",
+      "sha256": "e45df365f080198ab4f4cd38916d0bc9300d2bd4bdea76fc0fee00011413221c",
+      "created_at": "2026-07-30T21:44:03Z"
+    },
+    {
+      "path": "dists/stable/Release.gpg",
+      "scheme": "openpgp-detached-armored-v4",
+      "fingerprint": "1e00d64dcafdff06dc70acefdf1c620e53596d7f",
+      "payload_sha256": "bd0cff9d065782409be0d6d9e2f73d30dabeb04c778568033e65a04fa1bfda63",
+      "sha256": "09f1d831c1e7e9e99c813331d856eac383195d8ffd8c06e2c0657f7a1a406019",
+      "created_at": "2026-07-30T21:44:03Z"
+    }
+  ]
+}

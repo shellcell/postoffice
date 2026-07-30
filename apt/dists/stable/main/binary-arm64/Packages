@@ -1,0 +1,170 @@
+Package: snailmail
+Version: 0.0.3-1
+Section: utils
+Priority: optional
+Architecture: arm64
+Maintainer: shellcell <noreply@shellcell.dev>
+Description: Relaxed package delivery
+ snailmail builds and publishes deterministic static package
+ repositories from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.0.3-1_arm64.deb
+Size: 5339914
+MD5sum: 6b0efc8bb66d2b3fa74d35542284e5aa
+SHA1: ff92c808bc014e4129eb97b1b2e820d672fffa6b
+SHA256: 7963ba3b968e977c49d6f69cbde0b97f7ad480d20ba04be09e71b3bb8befd6a1
+
+Package: snailmail
+Version: 0.0.5-1
+Section: utils
+Priority: optional
+Architecture: arm64
+Maintainer: shellcell <noreply@shellcell.dev>
+Description: Relaxed package delivery
+ snailmail builds and publishes deterministic static package
+ repositories from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.0.5-1_arm64.deb
+Size: 5393304
+MD5sum: acfd0f109a56e3c036286610697a1675
+SHA1: 9625050549c07fed5d27e78d872f8fee8581c7da
+SHA256: 13fdf17d1512a7b6db79a50740ac1bfab133dd5e481b850187ff2a7632f94a52
+
+Package: snailmail
+Version: 0.0.6-1
+Section: utils
+Priority: optional
+Architecture: arm64
+Maintainer: shellcell <noreply@shellcell.dev>
+Description: Relaxed package delivery
+ snailmail builds and publishes deterministic static package
+ repositories from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.0.6-1_arm64.deb
+Size: 5417984
+MD5sum: b5c529f07cb4d7527947dad6b2e65d6e
+SHA1: d09fe3bf53332307b78791cf8b7c589b514cff6b
+SHA256: b3f5b58c8431087d3289a68c11d0394573287e7210dc67b556bb0916fe3be18f
+
+Package: snailmail
+Version: 0.0.9-1
+Section: 
+Priority: optional
+Architecture: arm64
+Installed-Size: 19456
+Maintainer: shellcell <noreply@shellcell.dev>
+Homepage: https://github.com/shellcell/snailmail
+Description: Relaxed package delivery.
+ snailmail builds and publishes deterministic static package repositories
+ from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.0.9-1_arm64.deb
+Size: 7009540
+MD5sum: cc300c7fc6c3f8f0684cab17392f7fe5
+SHA1: 641e879de8ba3b75bcc09d129a6657b62d935fb5
+SHA256: 8f913f9f4f5d216c89a8e3e8363bbae85dc460518e68c4bafda1d7f81b3dcddc
+License: MIT
+
+Package: snailmail
+Version: 0.1.0-1
+Section: 
+Priority: optional
+Architecture: arm64
+Installed-Size: 19456
+Maintainer: shellcell <noreply@shellcell.dev>
+Homepage: https://github.com/shellcell/snailmail
+Description: Relaxed package delivery.
+ snailmail builds and publishes deterministic static package repositories
+ from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.1.0-1_arm64.deb
+Size: 7021598
+MD5sum: 4f71832dc7345647eb4fffb94b759517
+SHA1: fe8613fff66f4e9077ed29390ae078e4f051119b
+SHA256: 3a0ed97f86de3d4b0bdea1068c35f440c8413a8830b785f79d718f49855bcebe
+License: MIT
+
+Package: snailmail
+Version: 0.1.1-1
+Section: 
+Priority: optional
+Architecture: arm64
+Installed-Size: 19456
+Maintainer: shellcell <noreply@shellcell.dev>
+Homepage: https://github.com/shellcell/snailmail
+Description: Relaxed package delivery.
+ snailmail builds and publishes deterministic static package repositories
+ from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.1.1-1_arm64.deb
+Size: 7026678
+MD5sum: 2b31ef3de5ead06973b5361aad75a6f9
+SHA1: 2b71c7ca0913a99f1c081e224ab39aa98675c874
+SHA256: ed2e3b1e303bcd7155f8b30197b59f845bcd0b27d15dd7e057e4be9106cd334e
+License: MIT
+
+Package: snailmail
+Version: 0.1.2-1
+Section: 
+Priority: optional
+Architecture: arm64
+Installed-Size: 19584
+Maintainer: shellcell <noreply@shellcell.dev>
+Homepage: https://github.com/shellcell/snailmail
+Description: Relaxed package delivery.
+ snailmail builds and publishes deterministic static package repositories
+ from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.1.2-1_arm64.deb
+Size: 7045802
+MD5sum: 33b9362add65b78aa249a34aca0f3782
+SHA1: a0c88c38bbd91d870729945ace889faba062c2e3
+SHA256: f84b5f636dce9aecb5cdc4f3c26c89dbe36fc661be5f7afec07f1569ca88d3c7
+License: MIT
+
+Package: snailmail
+Version: 0.1.3-1
+Section: 
+Priority: optional
+Architecture: arm64
+Installed-Size: 19584
+Maintainer: shellcell <noreply@shellcell.dev>
+Homepage: https://github.com/shellcell/snailmail
+Description: Relaxed package delivery.
+ snailmail builds and publishes deterministic static package repositories
+ from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.1.3-1_arm64.deb
+Size: 7055844
+MD5sum: dcad84dad602289bdaa8d3874362e001
+SHA1: da62f633a724cef0eec415a7c24e9250da2e9615
+SHA256: 4c9b7ed46720ecaa3ab22e959259790801178ad9c9b445cb043e23c142eeeded
+License: MIT
+
+Package: snailmail
+Version: 0.1.4-1
+Section: 
+Priority: optional
+Architecture: arm64
+Installed-Size: 19904
+Maintainer: shellcell <noreply@shellcell.dev>
+Homepage: https://github.com/shellcell/snailmail
+Description: Relaxed package delivery.
+ snailmail builds and publishes deterministic static package repositories
+ from a Git-backed workspace.
+Filename: pool/main/s/snailmail/snailmail_0.1.4-1_arm64.deb
+Size: 7186922
+MD5sum: c461ddf5504819cad0e472e83ba5dfc3
+SHA1: 6f49145d0ec6f25a48b7a7a7f6cd63ea027dcd27
+SHA256: 83ce669449c7de217b9a55d3ff5a999cf2a45dc1dbbc0ea961eb4c058704c301
+License: MIT
+
+Package: ttysvg
+Version: 0.1.2
+Section: utils
+Priority: optional
+Architecture: arm64
+Installed-Size: 2890
+Maintainer: Polina Simonenko <rabarbrablad@gmail.com>
+Homepage: https://github.com/shellcell/ttysvg
+Description: Record terminal sessions as animated SVG.
+ ttysvg records an interactive terminal session in a child PTY and converts the
+ captured output into a self-contained, script-free animated SVG.
+Filename: pool/main/t/ttysvg/ttysvg_0.1.2_arm64.deb
+Size: 1217650
+MD5sum: a6997cbbbcca1463482c02bb41f576e8
+SHA1: 3cbb650a45391fbc0480f439d663a5235b41ad9d
+SHA256: 79ebe7624ed63a4db156c8d7215648ac46fc1532f686f5371ce24d5de8728731
+

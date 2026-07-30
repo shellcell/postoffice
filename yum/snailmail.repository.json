@@ -1,0 +1,201 @@
+{
+  "schema_version": 3,
+  "format": "rpm/v1",
+  "generated_at": "2026-07-30T21:44:03Z",
+  "tree_sha256": "f8457878781dc6e1553d07f94b71fd779ecb7eb1c34b3466746d70649187b561",
+  "files": [
+    {
+      "path": "Packages/snailmail-0.0.9-1.aarch64.rpm",
+      "size": 7207181,
+      "sha256": "4739ce4d1f3719b2def08c05a526527016c2fa1c9ae22d39faa90e05ac216f5e"
+    },
+    {
+      "path": "Packages/snailmail-0.0.9-1.x86_64.rpm",
+      "size": 8113009,
+      "sha256": "e560a18cd76c7a335b6488a2da3abe856573b0d90cef66bfeffd5e0910417c9a"
+    },
+    {
+      "path": "Packages/snailmail-0.1.0-1.aarch64.rpm",
+      "size": 7209447,
+      "sha256": "d99980932073e8a933b883e8bf4d993ed06a01aec17dc2aac39f92788c7ad33e"
+    },
+    {
+      "path": "Packages/snailmail-0.1.0-1.x86_64.rpm",
+      "size": 8121611,
+      "sha256": "a84ee578e0b16f4e8fcafa04ab315583e24c1e64df3a591fa9215884bda57488"
+    },
+    {
+      "path": "Packages/snailmail-0.1.1-1.aarch64.rpm",
+      "size": 7214838,
+      "sha256": "e69dfd1e49e1d4679bbcd7f6cba94df49264c307f0f9c847a340bb687f341bec"
+    },
+    {
+      "path": "Packages/snailmail-0.1.1-1.x86_64.rpm",
+      "size": 8136475,
+      "sha256": "93ce1e9cde0a7e00bcc8a057b4638267ac963f509eb08c09b58ef79246b0ab81"
+    },
+    {
+      "path": "Packages/snailmail-0.1.2-1.aarch64.rpm",
+      "size": 7249359,
+      "sha256": "6e434d89764dfb0fdf887d88ca0cf515277f088608edf0cf5e44a887098657f2"
+    },
+    {
+      "path": "Packages/snailmail-0.1.2-1.x86_64.rpm",
+      "size": 8148751,
+      "sha256": "ead3c05d07c11bf47729d6fc573eb41e44d407e94cc09955242b31b1e4a312ce"
+    },
+    {
+      "path": "Packages/snailmail-0.1.3-1.aarch64.rpm",
+      "size": 7274202,
+      "sha256": "bf5179bd1ec27606d7614998911a9dec62f5a3b7873e5dd184b2a0e81791aa7c"
+    },
+    {
+      "path": "Packages/snailmail-0.1.3-1.x86_64.rpm",
+      "size": 8175671,
+      "sha256": "b5eafb30bbdce78cefc47234d7ebd58aae8ae54cf2055f7750bf8aa0df3a29a8"
+    },
+    {
+      "path": "Packages/snailmail-0.1.4-1.aarch64.rpm",
+      "size": 7379817,
+      "sha256": "8a9e9f255deec99f21cab22bff08091667456b60f0c147fa12560c25591edf23"
+    },
+    {
+      "path": "Packages/snailmail-0.1.4-1.x86_64.rpm",
+      "size": 8287433,
+      "sha256": "29a6d0577660476eddbed99cbc9fdac57241f293e17cbe751fa268122399b39f"
+    },
+    {
+      "path": "Packages/ttysvg-0.1.2-1.aarch64.rpm",
+      "size": 1213974,
+      "sha256": "a390725031cf291500ef20357413bbbb762344df2efe831a30e2b5aa1e6227c2"
+    },
+    {
+      "path": "Packages/ttysvg-0.1.2-1.x86_64.rpm",
+      "size": 1331539,
+      "sha256": "65b276298ae2ac63dbe7b9103d4cb7249a752ad359322cba11bc716c712412f2"
+    },
+    {
+      "path": "index.html",
+      "size": 26838,
+      "sha256": "2765c249598df38fcf62f5a6e9992d1ecf311a80962ac0833c091324d5afec67"
+    },
+    {
+      "path": "keys/yum-archive-keyring.asc",
+      "size": 3146,
+      "sha256": "e812747241b2a67c891da6d309d970826a48c341623f5836611b7c81fc0ce427"
+    },
+    {
+      "path": "repodata/030845df79ae0470c0f0158beb8ccf6f612a926c618f672fbe2097fe2b1097c0-other.xml.gz",
+      "size": 800,
+      "sha256": "030845df79ae0470c0f0158beb8ccf6f612a926c618f672fbe2097fe2b1097c0"
+    },
+    {
+      "path": "repodata/2aa8af7c5a9672fc9c222b929127fc2e40c36614abfaf2f1eb44ab3fce792bff-filelists.xml.gz",
+      "size": 802,
+      "sha256": "2aa8af7c5a9672fc9c222b929127fc2e40c36614abfaf2f1eb44ab3fce792bff"
+    },
+    {
+      "path": "repodata/3c2160451a92a0ccb9144375933c8caf848c429d1053a097d1ab83d9ce352b09-primary.xml.gz",
+      "size": 1859,
+      "sha256": "3c2160451a92a0ccb9144375933c8caf848c429d1053a097d1ab83d9ce352b09"
+    },
+    {
+      "path": "repodata/repomd.xml",
+      "size": 1550,
+      "sha256": "c47ad9a94db36756fa57ab0a3afa7ce45353963d86741a6994d0463854147e2b"
+    },
+    {
+      "path": "repodata/repomd.xml.asc",
+      "size": 832,
+      "sha256": "b4b2b54a004c4ce3f0718d0e0db9d31c0bc63d02ddd5faf7e47b033196c2d9bd"
+    }
+  ],
+  "install": {
+    "kind": "rpm",
+    "index_path": "repodata/repomd.xml",
+    "signing_key_path": "keys/yum-archive-keyring.asc",
+    "signing_fingerprint": "1e00d64dcafdff06dc70acefdf1c620e53596d7f"
+  },
+  "verification_cases": [
+    {
+      "package": "snailmail",
+      "version": "0.0.9-1",
+      "architecture": "aarch64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.0.9-1",
+      "architecture": "x86_64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.0-1",
+      "architecture": "aarch64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.0-1",
+      "architecture": "x86_64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.1-1",
+      "architecture": "aarch64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.1-1",
+      "architecture": "x86_64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.2-1",
+      "architecture": "aarch64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.2-1",
+      "architecture": "x86_64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.3-1",
+      "architecture": "aarch64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.3-1",
+      "architecture": "x86_64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.4-1",
+      "architecture": "aarch64"
+    },
+    {
+      "package": "snailmail",
+      "version": "0.1.4-1",
+      "architecture": "x86_64"
+    },
+    {
+      "package": "ttysvg",
+      "version": "0.1.2-1",
+      "architecture": "aarch64"
+    },
+    {
+      "package": "ttysvg",
+      "version": "0.1.2-1",
+      "architecture": "x86_64"
+    }
+  ],
+  "signatures": [
+    {
+      "path": "repodata/repomd.xml.asc",
+      "scheme": "openpgp-detached-armored-v4",
+      "fingerprint": "1e00d64dcafdff06dc70acefdf1c620e53596d7f",
+      "payload_sha256": "",
+      "sha256": "b4b2b54a004c4ce3f0718d0e0db9d31c0bc63d02ddd5faf7e47b033196c2d9bd",
+      "created_at": ""
+    }
+  ]
+}

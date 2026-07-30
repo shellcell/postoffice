@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>apt</title>
+<style>
+/* Both themes are stated rather than inherited: a published page is read as
+   often from a dark desktop as a bright one, and leaving it to the user agent
+   means the colours chosen below only hold for one of them. */
+:root {
+  color-scheme: light dark;
+  --fg: #1c1f23; --bg: #ffffff; --muted: #5b6169;
+  --line: rgba(0,0,0,.14); --panel: rgba(0,0,0,.05);
+  --ok: #2f7d52; --warn: #a8720d;
+  --command: #2f6f4f; --flag: #6f4fa8; --string: #9a5b2f;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e6e8ea; --bg: #14171a; --muted: #9aa2ab;
+    --line: rgba(255,255,255,.16); --panel: rgba(255,255,255,.07);
+    --ok: #6fcf97; --warn: #e0b060;
+    --command: #7fd4a0; --flag: #c3a6f0; --string: #e0a86a;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  max-width: 62rem; margin: 0 auto;
+  /* Safe-area insets so a notched phone held sideways does not put the first
+     column under the bezel. */
+  padding: 2rem max(1.25rem, env(safe-area-inset-right)) 2rem max(1.25rem, env(safe-area-inset-left));
+  color: var(--fg); background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+/* Long names and endpoints break rather than widening the page past the phone. */
+h1, .lede { overflow-wrap: anywhere; }
+/* Room for the copy button so it never lands on top of a long command. */
+.snippet pre { padding-right: 5.5rem; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+h1 { font-size: 1.5rem; margin: 0 0 .2rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 .6rem; }
+.lede { margin: 0 0 1.25rem; color: var(--muted); }
+code { font: .9em ui-monospace, SFMono-Regular, Menlo, monospace; }
+.note { border-left: 3px solid var(--line); padding: .6rem 0 .6rem 1rem; margin: 1rem 0; }
+.note.signed { border-left-color: var(--ok); }
+.note.unsigned { border-left-color: var(--warn); }
+.snippet { position: relative; }
+.snippet pre {
+  background: var(--panel); padding: .85rem 1rem; border-radius: 6px;
+  overflow-x: auto; margin: 0; border: 1px solid var(--line);
+}
+button.copy {
+  font: inherit; font-size: .8rem; cursor: pointer; color: inherit;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 5px; padding: .1rem .5rem;
+}
+button.copy:hover { border-color: var(--muted); }
+.snippet button.copy { position: absolute; top: .6rem; right: .6rem; }
+nav { margin-bottom: 1.25rem; font-size: .9rem; }
+nav a { color: var(--muted); text-decoration: none; }
+nav a:hover { color: var(--fg); text-decoration: underline; }
+/* The digest column is 64 characters wide, so the table scrolls inside its own
+   box rather than pushing the page sideways. */
+/* The filter is the difference between a page you scan and a page you search:
+   the listing shows up to five hundred rows, which is past what anyone reads
+   down, and find-in-page cannot hide the rows that do not match.
+
+   Revealed by the script rather than the markup, because without JavaScript it
+   would be an input that does nothing, and a dead control is worse than none. */
+.filter { display: flex; flex-wrap: wrap; align-items: baseline; gap: .75rem; margin: .75rem 0 .25rem; }
+.filter input {
+  font: inherit; flex: 1 1 18rem; min-width: 0;
+  padding: .5rem .7rem; border-radius: 6px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg);
+}
+.filter input::placeholder { color: var(--muted); }
+.filter-count { margin: 0; font-size: .85rem; color: var(--muted); }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+tr[hidden] { display: none; }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; margin-top: .5rem; }
+th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--line); }
+th { user-select: none; white-space: nowrap; font-weight: 600; }
+/* The header follows a long list down, so a reader four hundred rows in still
+   knows which column they are looking at. */
+thead th { position: sticky; top: 0; z-index: 1; background: var(--bg); }
+/* A real button rather than a clickable th: sorting was reachable by mouse only,
+   so a keyboard reader could not do it and a screen reader was never told the
+   header did anything. It is styled back down to look like the header it is. */
+button.sort {
+  font: inherit; font-weight: 600; color: inherit; cursor: pointer;
+  background: none; border: 0; padding: .1rem 0;
+  display: inline-flex; align-items: center; gap: .3rem;
+}
+button.sort::after { content: "\2195"; opacity: .35; font-weight: 400; }
+th[data-order="asc"] button.sort::after { content: "\2191"; opacity: .9; }
+th[data-order="desc"] button.sort::after { content: "\2193"; opacity: .9; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 3px; }
+/* Numbers align on their last digit so sizes compare down the column. */
+td.size { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.when { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
+td.when .unknown { opacity: .6; }
+/* The full digest is shown, because a truncated hash cannot be compared against
+   anything — but 64 unbroken characters are wider than the page, and holding them
+   on one line pushed the whole table sideways until nothing else fitted. It wraps
+   inside a bounded column instead, which is what the comment here always claimed
+   and the rule never did. */
+td.digest { max-width: 19rem; }
+td.digest code {
+  font-size: .78em; color: var(--muted);
+  display: block; word-break: break-all; margin-bottom: .3rem;
+}
+td.link { white-space: nowrap; }
+code.shell { display: block; }
+/* Shallow shell colouring: enough to find the command and its arguments. */
+.s-comment { color: var(--muted); font-style: italic; }
+.s-command { color: var(--command); font-weight: 600; }
+.s-flag    { color: var(--flag); }
+.s-string  { color: var(--string); }
+.empty { color: var(--muted); }
+.muted { color: var(--muted); font-weight: 400; font-size: .85em; }
+/* The matrix reads down a column as much as across a row, so the package name
+   stays put while the versions scroll. */
+td.tool { font-weight: 600; }
+td.version a { text-decoration: none; border-bottom: 1px solid var(--line); }
+td.absent { color: var(--muted); opacity: .5; }
+#matrix th a { text-decoration: none; }
+ul.repositories { list-style: none; padding: 0; }
+ul.repositories li { padding: .35rem 0; border-bottom: 1px solid var(--line); }
+.badge {
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .04em;
+  border: 1px solid currentColor; border-radius: 999px; padding: .05rem .45rem;
+}
+.badge.signed { color: var(--ok); }
+.badge.unsigned { color: var(--warn); }
+.windowed { margin-top: 1.5rem; padding: .6rem .8rem; font-size: .9rem;
+  color: var(--muted); border-left: 2px solid var(--warn); }
+footer { margin-top: 2.5rem; font-size: .85rem; color: var(--muted); }
+a { color: inherit; }
+/* On a narrow screen a seven-column table is not something anyone can read, so
+   each row becomes a card and every cell carries its own label.
+
+   This replaced hiding columns by position, which dropped the architecture and
+   the digest — the two facts someone checking a package on a phone is most often
+   there for. Nothing is hidden now; it is only laid out differently. */
+@media (max-width: 46rem) {
+  /* Scoped to the artifact list on purpose. The site's matrix of packages against
+     repositories is genuinely two-dimensional — a cell means something by its row
+     and its column together — so flattening it into cards would destroy the thing
+     it exists to show. It keeps scrolling sideways, which is the honest
+     affordance for a table that is actually wide. */
+  #artifacts, #artifacts tbody, #artifacts tr, #artifacts td { display: block; width: 100%; }
+  #artifacts thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  #artifacts tr {
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: .6rem .8rem; margin-bottom: .75rem;
+  }
+  #artifacts td { border: 0; padding: .3rem 0; display: flex; gap: 1rem; align-items: baseline; }
+  #artifacts td::before {
+    content: attr(data-label); color: var(--muted); font-size: .75rem;
+    flex: 0 0 5rem; text-transform: uppercase; letter-spacing: .03em;
+  }
+  /* The package name reads as the card's heading rather than another labelled row. */
+  #artifacts tr td:first-child { font-size: 1.05rem; font-weight: 600; padding-top: 0; }
+  #artifacts tr td:first-child::before { display: none; }
+  #artifacts tr td:last-child { padding-bottom: 0; }
+  #artifacts td.size { text-align: left; }
+  #artifacts td.digest { max-width: none; }
+}
+/* Anything a finger has to hit gets a touch-sized target. Twenty pixels is fine
+   with a mouse and a guess with a thumb. */
+@media (pointer: coarse) {
+  button.copy { min-height: 2.75rem; padding-inline: .8rem; }
+  button.sort { min-height: 2.5rem; }
+}</style>
+</head>
+<body>
+<nav><a href="../">&larr; All repositories</a></nav>
+<h1>apt</h1>
+<p class="lede">DEB repository at <code>https://dl.shellcell.dev/apt</code></p>
+<div class="note signed"><strong>Signed.</strong> Verified with the openpgp-rsa4096 key <code>1e00d64dcafdff06dc70acefdf1c620e53596d7f</code>, published at <a href="keys/archive-signing.gpg">keys/archive-signing.gpg</a>.</div>
+<h2>Install</h2>
+<div class="snippet"><button class="copy" data-copy="curl -fsSL https://dl.shellcell.dev/apt/keys/archive-signing.gpg \
+  | sudo tee /usr/share/keyrings/apt.gpg &gt; /dev/null
+echo &#39;deb [signed-by=/usr/share/keyrings/apt.gpg] https://dl.shellcell.dev/apt stable main&#39; \
+  | sudo tee /etc/apt/sources.list.d/apt.list
+sudo apt-get update &amp;&amp; sudo apt-get install &lt;package&gt;">Copy</button><pre><code class="shell"><span class="s-command">curl</span> <span class="s-flag">-fsSL</span> https://dl.shellcell.dev/apt/keys/archive-signing.gpg \
+  | <span class="s-command">sudo</span> tee /usr/share/keyrings/apt.gpg &gt; /dev/null
+<span class="s-command">echo</span> <span class="s-string">&#39;deb [signed-by=/usr/share/keyrings/apt.gpg] https://dl.shellcell.dev/apt stable main&#39;</span> \
+  | <span class="s-command">sudo</span> tee /etc/apt/sources.list.d/apt.list
+<span class="s-command">sudo</span> apt-get update &amp;&amp; <span class="s-command">sudo</span> apt-get install &lt;package&gt;</code></pre></div>
+<h2>Packages</h2>
+<div class="filter" hidden>
+<label class="visually-hidden" for="filter">Filter packages</label>
+<input id="filter" type="search" autocomplete="off" placeholder="Filter by name, version or architecture" aria-controls="artifacts">
+<p class="filter-count" role="status" aria-live="polite"></p>
+</div>
+<div class="table-scroll">
+<table id="artifacts">
+<thead><tr><th scope="col" data-column="0" data-sort="text"><button type="button" class="sort">Package</button></th><th scope="col" data-column="1" data-sort="text"><button type="button" class="sort">Version</button></th><th scope="col" data-column="2" data-sort="text"><button type="button" class="sort">Arch</button></th><th scope="col" data-column="3" data-sort="number"><button type="button" class="sort">Size</button></th><th scope="col" data-column="4" data-sort="number"><button type="button" class="sort">Published</button></th><th scope="col" class="plain">SHA-256</th><th scope="col" class="plain">Link</th></tr></thead>
+<tbody>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.4-1_amd64.deb">snailmail</a></td><td data-label="Version">0.1.4-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7987240">7.6 MiB</td><td class="when" data-label="Published" data-value="1785447837"><time datetime="2026-07-30T21:43:57Z">2026-07-30</time></td><td class="digest" data-label="SHA-256"><code>5beede6d126296e8fea9261c8ae4eada0e80b6045ceef69980294e1383f937fa</code><button type="button" class="copy" data-copy="5beede6d126296e8fea9261c8ae4eada0e80b6045ceef69980294e1383f937fa" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.4-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.4-1_arm64.deb">snailmail</a></td><td data-label="Version">0.1.4-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7186922">6.9 MiB</td><td class="when" data-label="Published" data-value="1785447838"><time datetime="2026-07-30T21:43:58Z">2026-07-30</time></td><td class="digest" data-label="SHA-256"><code>83ce669449c7de217b9a55d3ff5a999cf2a45dc1dbbc0ea961eb4c058704c301</code><button type="button" class="copy" data-copy="83ce669449c7de217b9a55d3ff5a999cf2a45dc1dbbc0ea961eb4c058704c301" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.4-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.3-1_amd64.deb">snailmail</a></td><td data-label="Version">0.1.3-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7887752">7.5 MiB</td><td class="when" data-label="Published" data-value="1785337101"><time datetime="2026-07-29T14:58:21Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>faf41fec4f9182637891827285297c23ae35d10a360442db7f309bfc44eb7d39</code><button type="button" class="copy" data-copy="faf41fec4f9182637891827285297c23ae35d10a360442db7f309bfc44eb7d39" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.3-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.3-1_arm64.deb">snailmail</a></td><td data-label="Version">0.1.3-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7055844">6.7 MiB</td><td class="when" data-label="Published" data-value="1785337102"><time datetime="2026-07-29T14:58:22Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>4c9b7ed46720ecaa3ab22e959259790801178ad9c9b445cb043e23c142eeeded</code><button type="button" class="copy" data-copy="4c9b7ed46720ecaa3ab22e959259790801178ad9c9b445cb043e23c142eeeded" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.3-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.2-1_amd64.deb">snailmail</a></td><td data-label="Version">0.1.2-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7877432">7.5 MiB</td><td class="when" data-label="Published" data-value="1785328848"><time datetime="2026-07-29T12:40:48Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>dd0e56d3868f3dca70c7b28de9d61a413cb5a858e0c61788914452c4d56239f1</code><button type="button" class="copy" data-copy="dd0e56d3868f3dca70c7b28de9d61a413cb5a858e0c61788914452c4d56239f1" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.2-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.2-1_arm64.deb">snailmail</a></td><td data-label="Version">0.1.2-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7045802">6.7 MiB</td><td class="when" data-label="Published" data-value="1785328849"><time datetime="2026-07-29T12:40:49Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>f84b5f636dce9aecb5cdc4f3c26c89dbe36fc661be5f7afec07f1569ca88d3c7</code><button type="button" class="copy" data-copy="f84b5f636dce9aecb5cdc4f3c26c89dbe36fc661be5f7afec07f1569ca88d3c7" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.2-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.1-1_amd64.deb">snailmail</a></td><td data-label="Version">0.1.1-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7854974">7.5 MiB</td><td class="when" data-label="Published" data-value="1785323696"><time datetime="2026-07-29T11:14:56Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>74879fc4e9d0651e82d69c3f3f6938320971318ef5085ea1c23f6e7efe266361</code><button type="button" class="copy" data-copy="74879fc4e9d0651e82d69c3f3f6938320971318ef5085ea1c23f6e7efe266361" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.1-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.1-1_arm64.deb">snailmail</a></td><td data-label="Version">0.1.1-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7026678">6.7 MiB</td><td class="when" data-label="Published" data-value="1785323697"><time datetime="2026-07-29T11:14:57Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>ed2e3b1e303bcd7155f8b30197b59f845bcd0b27d15dd7e057e4be9106cd334e</code><button type="button" class="copy" data-copy="ed2e3b1e303bcd7155f8b30197b59f845bcd0b27d15dd7e057e4be9106cd334e" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.1-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.0-1_amd64.deb">snailmail</a></td><td data-label="Version">0.1.0-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7852920">7.5 MiB</td><td class="when" data-label="Published" data-value="1785317711"><time datetime="2026-07-29T09:35:11Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>83ad6a6851bd6eaf7e020cfb82afe101056070f2c1882c894d14d70f38541f3d</code><button type="button" class="copy" data-copy="83ad6a6851bd6eaf7e020cfb82afe101056070f2c1882c894d14d70f38541f3d" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.0-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.1.0-1_arm64.deb">snailmail</a></td><td data-label="Version">0.1.0-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7021598">6.7 MiB</td><td class="when" data-label="Published" data-value="1785317712"><time datetime="2026-07-29T09:35:12Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>3a0ed97f86de3d4b0bdea1068c35f440c8413a8830b785f79d718f49855bcebe</code><button type="button" class="copy" data-copy="3a0ed97f86de3d4b0bdea1068c35f440c8413a8830b785f79d718f49855bcebe" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.1.0-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.0.9-1_amd64.deb">snailmail</a></td><td data-label="Version">0.0.9-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7836236">7.5 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>4450aac00ce03985c80b54ef24e78aa8d2a0f7f8120b381af89700cd9ff873f6</code><button type="button" class="copy" data-copy="4450aac00ce03985c80b54ef24e78aa8d2a0f7f8120b381af89700cd9ff873f6" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.0.9-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.0.9-1_arm64.deb">snailmail</a></td><td data-label="Version">0.0.9-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7009540">6.7 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>8f913f9f4f5d216c89a8e3e8363bbae85dc460518e68c4bafda1d7f81b3dcddc</code><button type="button" class="copy" data-copy="8f913f9f4f5d216c89a8e3e8363bbae85dc460518e68c4bafda1d7f81b3dcddc" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.0.9-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.0.6-1_amd64.deb">snailmail</a></td><td data-label="Version">0.0.6-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="6160702">5.9 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>712d69c73e8f09a7cc99b9f21c132b8e77d20c58b08ca648e66224e3ecc7d441</code><button type="button" class="copy" data-copy="712d69c73e8f09a7cc99b9f21c132b8e77d20c58b08ca648e66224e3ecc7d441" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.0.6-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.0.6-1_arm64.deb">snailmail</a></td><td data-label="Version">0.0.6-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="5417984">5.2 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>b3f5b58c8431087d3289a68c11d0394573287e7210dc67b556bb0916fe3be18f</code><button type="button" class="copy" data-copy="b3f5b58c8431087d3289a68c11d0394573287e7210dc67b556bb0916fe3be18f" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.0.6-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.0.5-1_amd64.deb">snailmail</a></td><td data-label="Version">0.0.5-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="6131920">5.8 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>4409e7b62692fe50b8766284921a7e12a380cc52a05e55c549eceeb80c2948d8</code><button type="button" class="copy" data-copy="4409e7b62692fe50b8766284921a7e12a380cc52a05e55c549eceeb80c2948d8" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.0.5-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.0.5-1_arm64.deb">snailmail</a></td><td data-label="Version">0.0.5-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="5393304">5.1 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>13fdf17d1512a7b6db79a50740ac1bfab133dd5e481b850187ff2a7632f94a52</code><button type="button" class="copy" data-copy="13fdf17d1512a7b6db79a50740ac1bfab133dd5e481b850187ff2a7632f94a52" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.0.5-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.0.3-1_amd64.deb">snailmail</a></td><td data-label="Version">0.0.3-1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="6071936">5.8 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>611a4dd5c98f61c90a4e7b73f0f958b3751dd37a59efc10c131ef65dbd8d560d</code><button type="button" class="copy" data-copy="611a4dd5c98f61c90a4e7b73f0f958b3751dd37a59efc10c131ef65dbd8d560d" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.0.3-1_amd64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/s/snailmail/snailmail_0.0.3-1_arm64.deb">snailmail</a></td><td data-label="Version">0.0.3-1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="5339914">5.1 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>7963ba3b968e977c49d6f69cbde0b97f7ad480d20ba04be09e71b3bb8befd6a1</code><button type="button" class="copy" data-copy="7963ba3b968e977c49d6f69cbde0b97f7ad480d20ba04be09e71b3bb8befd6a1" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/s/snailmail/snailmail_0.0.3-1_arm64.deb" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/t/ttysvg/ttysvg_0.1.2_amd64.deb">ttysvg</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="1332908">1.3 MiB</td><td class="when" data-label="Published" data-value="1785320211"><time datetime="2026-07-29T10:16:51Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>edd5bc14e13678e9064adceba0dffcfa10fb34709d969ddafa11579460a0f784</code><button type="button" class="copy" data-copy="edd5bc14e13678e9064adceba0dffcfa10fb34709d969ddafa11579460a0f784" aria-label="Copy the SHA-256 of ttysvg">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/t/ttysvg/ttysvg_0.1.2_amd64.deb" aria-label="Copy the download URL of ttysvg">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="pool/main/t/ttysvg/ttysvg_0.1.2_arm64.deb">ttysvg</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="1217650">1.2 MiB</td><td class="when" data-label="Published" data-value="1785320212"><time datetime="2026-07-29T10:16:52Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>79ebe7624ed63a4db156c8d7215648ac46fc1532f686f5371ce24d5de8728731</code><button type="button" class="copy" data-copy="79ebe7624ed63a4db156c8d7215648ac46fc1532f686f5371ce24d5de8728731" aria-label="Copy the SHA-256 of ttysvg">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/apt/pool/main/t/ttysvg/ttysvg_0.1.2_arm64.deb" aria-label="Copy the download URL of ttysvg">Copy link</button></td></tr>
+</tbody>
+</table>
+</div>
+<footer>20 artifacts. Every artifact is pinned by SHA-256 in a reviewed lock before publication.</footer>
+<script>
+document.addEventListener('click', function (event) {
+  var copy = event.target.closest('button.copy');
+  if (copy) {
+    navigator.clipboard.writeText(copy.dataset.copy).then(function () {
+      var was = copy.textContent;
+      copy.textContent = 'Copied';
+      setTimeout(function () { copy.textContent = was; }, 1200);
+    });
+    return;
+  }
+  var header = event.target.closest('th[data-column]');
+  if (!header) { return; }
+  event.preventDefault();
+  var table = header.closest('table');
+  var body = table.tBodies[0];
+  var column = Number(header.dataset.column);
+  var numeric = header.dataset.sort === 'number';
+  var descending = header.dataset.order !== 'desc';
+  Array.prototype.forEach.call(table.tHead.rows[0].cells, function (cell) {
+    delete cell.dataset.order;
+    cell.removeAttribute('aria-sort');
+  });
+  header.dataset.order = descending ? 'desc' : 'asc';
+  // Announced as well as drawn, so the arrow is not the only way to know.
+  header.setAttribute('aria-sort', descending ? 'descending' : 'ascending');
+  var rows = Array.prototype.slice.call(body.rows);
+  rows.sort(function (left, right) {
+    var a = left.cells[column], b = right.cells[column];
+    var result = numeric
+      ? Number(a.dataset.value) - Number(b.dataset.value)
+      : a.textContent.trim().localeCompare(b.textContent.trim(), undefined, { numeric: true });
+    return descending ? -result : result;
+  });
+  rows.forEach(function (row) { body.appendChild(row); });
+});
+
+// The filter is revealed here rather than in the markup: without this script it
+// would be an input that does nothing, and a control that ignores you is worse
+// than one that is absent.
+(function () {
+  var panel = document.querySelector('.filter');
+  var input = document.getElementById('filter');
+  var table = document.getElementById('artifacts');
+  if (!panel || !input || !table) { return; }
+  var count = panel.querySelector('.filter-count');
+  var rows = Array.prototype.slice.call(table.tBodies[0].rows);
+  panel.hidden = false;
+
+  // Matched against the row's own text rather than a prepared index, so a filter
+  // finds anything on the page — a name, a version, an architecture, a digest.
+  // Lower-cased once per row, because doing it per keystroke over five hundred
+  // rows is work nobody sees the benefit of.
+  var haystacks = rows.map(function (row) { return row.textContent.toLowerCase(); });
+
+  function apply() {
+    var needle = input.value.trim().toLowerCase();
+    var shown = 0;
+    rows.forEach(function (row, index) {
+      var matches = needle === '' || haystacks[index].indexOf(needle) !== -1;
+      row.hidden = !matches;
+      if (matches) { shown++; }
+    });
+    if (needle === '') {
+      count.textContent = '';
+      return;
+    }
+    count.textContent = shown === 0
+      ? 'No packages match ' + needle
+      : shown + ' of ' + rows.length + ' packages';
+  }
+
+  input.addEventListener('input', apply);
+  // Escape clears, which is what the control looks like it should do.
+  input.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') { input.value = ''; apply(); }
+  });
+})();</script>
+</body>
+</html>

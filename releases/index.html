@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>releases</title>
+<style>
+/* Both themes are stated rather than inherited: a published page is read as
+   often from a dark desktop as a bright one, and leaving it to the user agent
+   means the colours chosen below only hold for one of them. */
+:root {
+  color-scheme: light dark;
+  --fg: #1c1f23; --bg: #ffffff; --muted: #5b6169;
+  --line: rgba(0,0,0,.14); --panel: rgba(0,0,0,.05);
+  --ok: #2f7d52; --warn: #a8720d;
+  --command: #2f6f4f; --flag: #6f4fa8; --string: #9a5b2f;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e6e8ea; --bg: #14171a; --muted: #9aa2ab;
+    --line: rgba(255,255,255,.16); --panel: rgba(255,255,255,.07);
+    --ok: #6fcf97; --warn: #e0b060;
+    --command: #7fd4a0; --flag: #c3a6f0; --string: #e0a86a;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  max-width: 62rem; margin: 0 auto;
+  /* Safe-area insets so a notched phone held sideways does not put the first
+     column under the bezel. */
+  padding: 2rem max(1.25rem, env(safe-area-inset-right)) 2rem max(1.25rem, env(safe-area-inset-left));
+  color: var(--fg); background: var(--bg);
+  -webkit-text-size-adjust: 100%;
+}
+/* Long names and endpoints break rather than widening the page past the phone. */
+h1, .lede { overflow-wrap: anywhere; }
+/* Room for the copy button so it never lands on top of a long command. */
+.snippet pre { padding-right: 5.5rem; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+h1 { font-size: 1.5rem; margin: 0 0 .2rem; }
+h2 { font-size: 1.05rem; margin: 2rem 0 .6rem; }
+.lede { margin: 0 0 1.25rem; color: var(--muted); }
+code { font: .9em ui-monospace, SFMono-Regular, Menlo, monospace; }
+.note { border-left: 3px solid var(--line); padding: .6rem 0 .6rem 1rem; margin: 1rem 0; }
+.note.signed { border-left-color: var(--ok); }
+.note.unsigned { border-left-color: var(--warn); }
+.snippet { position: relative; }
+.snippet pre {
+  background: var(--panel); padding: .85rem 1rem; border-radius: 6px;
+  overflow-x: auto; margin: 0; border: 1px solid var(--line);
+}
+button.copy {
+  font: inherit; font-size: .8rem; cursor: pointer; color: inherit;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 5px; padding: .1rem .5rem;
+}
+button.copy:hover { border-color: var(--muted); }
+.snippet button.copy { position: absolute; top: .6rem; right: .6rem; }
+nav { margin-bottom: 1.25rem; font-size: .9rem; }
+nav a { color: var(--muted); text-decoration: none; }
+nav a:hover { color: var(--fg); text-decoration: underline; }
+/* The digest column is 64 characters wide, so the table scrolls inside its own
+   box rather than pushing the page sideways. */
+/* The filter is the difference between a page you scan and a page you search:
+   the listing shows up to five hundred rows, which is past what anyone reads
+   down, and find-in-page cannot hide the rows that do not match.
+
+   Revealed by the script rather than the markup, because without JavaScript it
+   would be an input that does nothing, and a dead control is worse than none. */
+.filter { display: flex; flex-wrap: wrap; align-items: baseline; gap: .75rem; margin: .75rem 0 .25rem; }
+.filter input {
+  font: inherit; flex: 1 1 18rem; min-width: 0;
+  padding: .5rem .7rem; border-radius: 6px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg);
+}
+.filter input::placeholder { color: var(--muted); }
+.filter-count { margin: 0; font-size: .85rem; color: var(--muted); }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+tr[hidden] { display: none; }
+.table-scroll { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; margin-top: .5rem; }
+th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid var(--line); }
+th { user-select: none; white-space: nowrap; font-weight: 600; }
+/* The header follows a long list down, so a reader four hundred rows in still
+   knows which column they are looking at. */
+thead th { position: sticky; top: 0; z-index: 1; background: var(--bg); }
+/* A real button rather than a clickable th: sorting was reachable by mouse only,
+   so a keyboard reader could not do it and a screen reader was never told the
+   header did anything. It is styled back down to look like the header it is. */
+button.sort {
+  font: inherit; font-weight: 600; color: inherit; cursor: pointer;
+  background: none; border: 0; padding: .1rem 0;
+  display: inline-flex; align-items: center; gap: .3rem;
+}
+button.sort::after { content: "\2195"; opacity: .35; font-weight: 400; }
+th[data-order="asc"] button.sort::after { content: "\2191"; opacity: .9; }
+th[data-order="desc"] button.sort::after { content: "\2193"; opacity: .9; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 3px; }
+/* Numbers align on their last digit so sizes compare down the column. */
+td.size { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.when { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
+td.when .unknown { opacity: .6; }
+/* The full digest is shown, because a truncated hash cannot be compared against
+   anything — but 64 unbroken characters are wider than the page, and holding them
+   on one line pushed the whole table sideways until nothing else fitted. It wraps
+   inside a bounded column instead, which is what the comment here always claimed
+   and the rule never did. */
+td.digest { max-width: 19rem; }
+td.digest code {
+  font-size: .78em; color: var(--muted);
+  display: block; word-break: break-all; margin-bottom: .3rem;
+}
+td.link { white-space: nowrap; }
+code.shell { display: block; }
+/* Shallow shell colouring: enough to find the command and its arguments. */
+.s-comment { color: var(--muted); font-style: italic; }
+.s-command { color: var(--command); font-weight: 600; }
+.s-flag    { color: var(--flag); }
+.s-string  { color: var(--string); }
+.empty { color: var(--muted); }
+.muted { color: var(--muted); font-weight: 400; font-size: .85em; }
+/* The matrix reads down a column as much as across a row, so the package name
+   stays put while the versions scroll. */
+td.tool { font-weight: 600; }
+td.version a { text-decoration: none; border-bottom: 1px solid var(--line); }
+td.absent { color: var(--muted); opacity: .5; }
+#matrix th a { text-decoration: none; }
+ul.repositories { list-style: none; padding: 0; }
+ul.repositories li { padding: .35rem 0; border-bottom: 1px solid var(--line); }
+.badge {
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .04em;
+  border: 1px solid currentColor; border-radius: 999px; padding: .05rem .45rem;
+}
+.badge.signed { color: var(--ok); }
+.badge.unsigned { color: var(--warn); }
+.windowed { margin-top: 1.5rem; padding: .6rem .8rem; font-size: .9rem;
+  color: var(--muted); border-left: 2px solid var(--warn); }
+footer { margin-top: 2.5rem; font-size: .85rem; color: var(--muted); }
+a { color: inherit; }
+/* On a narrow screen a seven-column table is not something anyone can read, so
+   each row becomes a card and every cell carries its own label.
+
+   This replaced hiding columns by position, which dropped the architecture and
+   the digest — the two facts someone checking a package on a phone is most often
+   there for. Nothing is hidden now; it is only laid out differently. */
+@media (max-width: 46rem) {
+  /* Scoped to the artifact list on purpose. The site's matrix of packages against
+     repositories is genuinely two-dimensional — a cell means something by its row
+     and its column together — so flattening it into cards would destroy the thing
+     it exists to show. It keeps scrolling sideways, which is the honest
+     affordance for a table that is actually wide. */
+  #artifacts, #artifacts tbody, #artifacts tr, #artifacts td { display: block; width: 100%; }
+  #artifacts thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  #artifacts tr {
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: .6rem .8rem; margin-bottom: .75rem;
+  }
+  #artifacts td { border: 0; padding: .3rem 0; display: flex; gap: 1rem; align-items: baseline; }
+  #artifacts td::before {
+    content: attr(data-label); color: var(--muted); font-size: .75rem;
+    flex: 0 0 5rem; text-transform: uppercase; letter-spacing: .03em;
+  }
+  /* The package name reads as the card's heading rather than another labelled row. */
+  #artifacts tr td:first-child { font-size: 1.05rem; font-weight: 600; padding-top: 0; }
+  #artifacts tr td:first-child::before { display: none; }
+  #artifacts tr td:last-child { padding-bottom: 0; }
+  #artifacts td.size { text-align: left; }
+  #artifacts td.digest { max-width: none; }
+}
+/* Anything a finger has to hit gets a touch-sized target. Twenty pixels is fine
+   with a mouse and a guess with a thumb. */
+@media (pointer: coarse) {
+  button.copy { min-height: 2.75rem; padding-inline: .8rem; }
+  button.sort { min-height: 2.5rem; }
+}</style>
+</head>
+<body>
+<nav><a href="../">&larr; All repositories</a></nav>
+<h1>releases</h1>
+<p class="lede">RAW repository at <code>https://dl.shellcell.dev/releases</code></p>
+<div class="note unsigned"><strong>This repository is not signed.</strong> Nothing verifies what you install from it, so a client will either refuse it or has been told not to check.</div>
+<h2>Install</h2>
+<div class="snippet"><button class="copy" data-copy="curl -LO https://dl.shellcell.dev/releases/&lt;name&gt;/&lt;version&gt;/&lt;file&gt;
+curl -LO https://dl.shellcell.dev/releases/SHA256SUMS
+sha256sum -c --ignore-missing SHA256SUMS">Copy</button><pre><code class="shell"><span class="s-command">curl</span> <span class="s-flag">-LO</span> https://dl.shellcell.dev/releases/&lt;name&gt;/&lt;version&gt;/&lt;file&gt;
+<span class="s-command">curl</span> <span class="s-flag">-LO</span> https://dl.shellcell.dev/releases/SHA256SUMS
+<span class="s-command">sha256sum</span> <span class="s-flag">-c</span> <span class="s-flag">--ignore-missing</span> SHA256SUMS</code></pre></div>
+<h2>Packages</h2>
+<div class="filter" hidden>
+<label class="visually-hidden" for="filter">Filter packages</label>
+<input id="filter" type="search" autocomplete="off" placeholder="Filter by name, version or architecture" aria-controls="artifacts">
+<p class="filter-count" role="status" aria-live="polite"></p>
+</div>
+<div class="table-scroll">
+<table id="artifacts">
+<thead><tr><th scope="col" data-column="0" data-sort="text"><button type="button" class="sort">Package</button></th><th scope="col" data-column="1" data-sort="text"><button type="button" class="sort">Version</button></th><th scope="col" data-column="2" data-sort="text"><button type="button" class="sort">Arch</button></th><th scope="col" data-column="3" data-sort="number"><button type="button" class="sort">Size</button></th><th scope="col" data-column="4" data-sort="number"><button type="button" class="sort">Published</button></th><th scope="col" class="plain">SHA-256</th><th scope="col" class="plain">Link</th></tr></thead>
+<tbody>
+<tr><td data-label="Package"><a href="snailmail/0.1.4/snailmail_0.1.4_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.4</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="8023538">7.7 MiB</td><td class="when" data-label="Published" data-value="1785447840"><time datetime="2026-07-30T21:44:00Z">2026-07-30</time></td><td class="digest" data-label="SHA-256"><code>16a9c729686b1e63404bed501e7e88ed44cec7097b50aaa95f7e83b7ca0702eb</code><button type="button" class="copy" data-copy="16a9c729686b1e63404bed501e7e88ed44cec7097b50aaa95f7e83b7ca0702eb" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.4/snailmail_0.1.4_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.4/snailmail_0.1.4_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.4</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7330268">7.0 MiB</td><td class="when" data-label="Published" data-value="1785447841"><time datetime="2026-07-30T21:44:01Z">2026-07-30</time></td><td class="digest" data-label="SHA-256"><code>8a0cbb98de38b5356ebb638e2593332f69f3b4dbd0ab3b779f8e2da060861f6b</code><button type="button" class="copy" data-copy="8a0cbb98de38b5356ebb638e2593332f69f3b4dbd0ab3b779f8e2da060861f6b" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.4/snailmail_0.1.4_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.4/snailmail_0.1.4_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.4</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7846625">7.5 MiB</td><td class="when" data-label="Published" data-value="1785447841"><time datetime="2026-07-30T21:44:01Z">2026-07-30</time></td><td class="digest" data-label="SHA-256"><code>2f3273db36e6e94157bd67182c652035477f735cd1a7f8dcbf279a607202a560</code><button type="button" class="copy" data-copy="2f3273db36e6e94157bd67182c652035477f735cd1a7f8dcbf279a607202a560" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.4/snailmail_0.1.4_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.4/snailmail_0.1.4_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.4</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7878481">7.5 MiB</td><td class="when" data-label="Published" data-value="1785447842"><time datetime="2026-07-30T21:44:02Z">2026-07-30</time></td><td class="digest" data-label="SHA-256"><code>95e2b4fbd9cdf2a613893454010cfeb1947e9a56509d502cfd0ae5c203955913</code><button type="button" class="copy" data-copy="95e2b4fbd9cdf2a613893454010cfeb1947e9a56509d502cfd0ae5c203955913" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.4/snailmail_0.1.4_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.4/snailmail_0.1.4_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.4</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7023209">6.7 MiB</td><td class="when" data-label="Published" data-value="1785447843"><time datetime="2026-07-30T21:44:03Z">2026-07-30</time></td><td class="digest" data-label="SHA-256"><code>b9bd5cda57adac7c6e996e20968697e3e0aaa714a12d2f8b8e1d915233db7594</code><button type="button" class="copy" data-copy="b9bd5cda57adac7c6e996e20968697e3e0aaa714a12d2f8b8e1d915233db7594" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.4/snailmail_0.1.4_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.3/snailmail_0.1.3_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.3</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7882189">7.5 MiB</td><td class="when" data-label="Published" data-value="1785337103"><time datetime="2026-07-29T14:58:23Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>9ccb8e65f2a01249421f3193918231225b23304d735fee1262373ec4db5b31fb</code><button type="button" class="copy" data-copy="9ccb8e65f2a01249421f3193918231225b23304d735fee1262373ec4db5b31fb" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.3/snailmail_0.1.3_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.3/snailmail_0.1.3_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.3</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7195869">6.9 MiB</td><td class="when" data-label="Published" data-value="1785337103"><time datetime="2026-07-29T14:58:23Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>5cc7f76813a7e3c77a474adc215270dc692251cd3d19cc7c3d4b0e9dbefeee63</code><button type="button" class="copy" data-copy="5cc7f76813a7e3c77a474adc215270dc692251cd3d19cc7c3d4b0e9dbefeee63" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.3/snailmail_0.1.3_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.3/snailmail_0.1.3_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.3</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7703670">7.3 MiB</td><td class="when" data-label="Published" data-value="1785337103"><time datetime="2026-07-29T14:58:23Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>09be10cb2c2a0ba7ab0cf5c281b9573077a404c1246ff01adb52bebebd460fcb</code><button type="button" class="copy" data-copy="09be10cb2c2a0ba7ab0cf5c281b9573077a404c1246ff01adb52bebebd460fcb" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.3/snailmail_0.1.3_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.3/snailmail_0.1.3_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.3</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7777916">7.4 MiB</td><td class="when" data-label="Published" data-value="1785337104"><time datetime="2026-07-29T14:58:24Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>b00f1e04735c7d9c604e16ad37e606b18bdd02def7dfed9a92bca606b5b38e71</code><button type="button" class="copy" data-copy="b00f1e04735c7d9c604e16ad37e606b18bdd02def7dfed9a92bca606b5b38e71" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.3/snailmail_0.1.3_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.3/snailmail_0.1.3_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.3</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="6894980">6.6 MiB</td><td class="when" data-label="Published" data-value="1785337104"><time datetime="2026-07-29T14:58:24Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>b8e476274d65a4e3c35407ee6781901500d0e601f5e32d122b87abe8c621fa1f</code><button type="button" class="copy" data-copy="b8e476274d65a4e3c35407ee6781901500d0e601f5e32d122b87abe8c621fa1f" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.3/snailmail_0.1.3_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.2/snailmail_0.1.2_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7873394">7.5 MiB</td><td class="when" data-label="Published" data-value="1785328852"><time datetime="2026-07-29T12:40:52Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>0704062c3299ffed16f9685ceb7f04eff444bd46d1a78fc688ad1f9c4f415835</code><button type="button" class="copy" data-copy="0704062c3299ffed16f9685ceb7f04eff444bd46d1a78fc688ad1f9c4f415835" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.2/snailmail_0.1.2_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.2/snailmail_0.1.2_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7184970">6.9 MiB</td><td class="when" data-label="Published" data-value="1785328853"><time datetime="2026-07-29T12:40:53Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>c89e27448517be38beddda884bbe2080037f89c2347fac335973b348e8ee133e</code><button type="button" class="copy" data-copy="c89e27448517be38beddda884bbe2080037f89c2347fac335973b348e8ee133e" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.2/snailmail_0.1.2_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.2/snailmail_0.1.2_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7694971">7.3 MiB</td><td class="when" data-label="Published" data-value="1785328854"><time datetime="2026-07-29T12:40:54Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>ce8f4cb688cee8aadd56aad74a35bd5916f390718f3781731eed50937a5f1265</code><button type="button" class="copy" data-copy="ce8f4cb688cee8aadd56aad74a35bd5916f390718f3781731eed50937a5f1265" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.2/snailmail_0.1.2_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.2/snailmail_0.1.2_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7768119">7.4 MiB</td><td class="when" data-label="Published" data-value="1785328855"><time datetime="2026-07-29T12:40:55Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>5ea6b412c4705cffe06aea143b45cc980bc7e39db1b0c817b2868d89f8759df8</code><button type="button" class="copy" data-copy="5ea6b412c4705cffe06aea143b45cc980bc7e39db1b0c817b2868d89f8759df8" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.2/snailmail_0.1.2_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.2/snailmail_0.1.2_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="6885287">6.6 MiB</td><td class="when" data-label="Published" data-value="1785328856"><time datetime="2026-07-29T12:40:56Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>427d8de57ce11143705e2c46e9e2c0b73b28bf785bf064d2af128007cf545749</code><button type="button" class="copy" data-copy="427d8de57ce11143705e2c46e9e2c0b73b28bf785bf064d2af128007cf545749" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.2/snailmail_0.1.2_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.1/snailmail_0.1.1_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7851460">7.5 MiB</td><td class="when" data-label="Published" data-value="1785323699"><time datetime="2026-07-29T11:14:59Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>e99d41d8544e08048a125dff4b6fd6d6c3cb79351ee01d3b2e938e7c32a5f745</code><button type="button" class="copy" data-copy="e99d41d8544e08048a125dff4b6fd6d6c3cb79351ee01d3b2e938e7c32a5f745" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.1/snailmail_0.1.1_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.1/snailmail_0.1.1_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7168662">6.8 MiB</td><td class="when" data-label="Published" data-value="1785323699"><time datetime="2026-07-29T11:14:59Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>ec8b38730e2c9d28196c4806ebe723138460b6bb32923ea3d571ed910b953ecd</code><button type="button" class="copy" data-copy="ec8b38730e2c9d28196c4806ebe723138460b6bb32923ea3d571ed910b953ecd" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.1/snailmail_0.1.1_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.1/snailmail_0.1.1_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7674569">7.3 MiB</td><td class="when" data-label="Published" data-value="1785323700"><time datetime="2026-07-29T11:15:00Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>aac888872f43bd6c07dcdbea485e905517519d5cfe7c74453773d33c1b4b3011</code><button type="button" class="copy" data-copy="aac888872f43bd6c07dcdbea485e905517519d5cfe7c74453773d33c1b4b3011" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.1/snailmail_0.1.1_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.1/snailmail_0.1.1_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.1</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7745949">7.4 MiB</td><td class="when" data-label="Published" data-value="1785323701"><time datetime="2026-07-29T11:15:01Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>b2c44210fe8d592382d8e48538f66616ec358d2b2208cd130b47c1b1ecb4af0a</code><button type="button" class="copy" data-copy="b2c44210fe8d592382d8e48538f66616ec358d2b2208cd130b47c1b1ecb4af0a" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.1/snailmail_0.1.1_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.1/snailmail_0.1.1_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.1</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="6864929">6.5 MiB</td><td class="when" data-label="Published" data-value="1785323701"><time datetime="2026-07-29T11:15:01Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>aa7b8968fc3136d0a3b29e7efc2a72dd9db543baf922959812b1a5c8e6bc6fcb</code><button type="button" class="copy" data-copy="aa7b8968fc3136d0a3b29e7efc2a72dd9db543baf922959812b1a5c8e6bc6fcb" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.1/snailmail_0.1.1_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.0/snailmail_0.1.0_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.0</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7844281">7.5 MiB</td><td class="when" data-label="Published" data-value="1785317708"><time datetime="2026-07-29T09:35:08Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>358d32feb107f85f70a72d8a09b59791e03ea157ae809aef332cfc35af2a8f2d</code><button type="button" class="copy" data-copy="358d32feb107f85f70a72d8a09b59791e03ea157ae809aef332cfc35af2a8f2d" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.0/snailmail_0.1.0_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.0/snailmail_0.1.0_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.0</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7162842">6.8 MiB</td><td class="when" data-label="Published" data-value="1785317709"><time datetime="2026-07-29T09:35:09Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>a8175cf894b83e9378bc327798955bbf12a6f2e03d9d03f3add954adee423752</code><button type="button" class="copy" data-copy="a8175cf894b83e9378bc327798955bbf12a6f2e03d9d03f3add954adee423752" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.0/snailmail_0.1.0_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.0/snailmail_0.1.0_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.0</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7669345">7.3 MiB</td><td class="when" data-label="Published" data-value="1785317709"><time datetime="2026-07-29T09:35:09Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>c6fe249e09b9b822287dc2afa6b7ab9c19e5cddc4fddeb3f001bec7903c306be</code><button type="button" class="copy" data-copy="c6fe249e09b9b822287dc2afa6b7ab9c19e5cddc4fddeb3f001bec7903c306be" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.0/snailmail_0.1.0_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.0/snailmail_0.1.0_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.1.0</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7739918">7.4 MiB</td><td class="when" data-label="Published" data-value="1785317710"><time datetime="2026-07-29T09:35:10Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>439a52fec1a1bd616a3c1758e1b92ed6b8d8d4f3a07939e845d85627e74b45d1</code><button type="button" class="copy" data-copy="439a52fec1a1bd616a3c1758e1b92ed6b8d8d4f3a07939e845d85627e74b45d1" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.0/snailmail_0.1.0_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.1.0/snailmail_0.1.0_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.1.0</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="6861913">6.5 MiB</td><td class="when" data-label="Published" data-value="1785317710"><time datetime="2026-07-29T09:35:10Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>37c1e252c562926457484e945efdfce7101fccd7a60814b6462e9d75a8a271a5</code><button type="button" class="copy" data-copy="37c1e252c562926457484e945efdfce7101fccd7a60814b6462e9d75a8a271a5" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.1.0/snailmail_0.1.0_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.9/snailmail_0.0.9_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.9</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7832904">7.5 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>2a64a6a1ab9e8d2a2e83bad02381db30e09ec312b70f18b95ee2eded0c0720bd</code><button type="button" class="copy" data-copy="2a64a6a1ab9e8d2a2e83bad02381db30e09ec312b70f18b95ee2eded0c0720bd" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.9/snailmail_0.0.9_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.9/snailmail_0.0.9_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.0.9</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7150167">6.8 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>8472252e16c7630a23fbaa6c43f534d9c906adf08c00d94ad939d4d3930ef526</code><button type="button" class="copy" data-copy="8472252e16c7630a23fbaa6c43f534d9c906adf08c00d94ad939d4d3930ef526" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.9/snailmail_0.0.9_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.9/snailmail_0.0.9_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.9</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7656201">7.3 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>aad0f028fc7bdb356a50b2954a2096b10a8217e317806d111ee96ecd94d96cab</code><button type="button" class="copy" data-copy="aad0f028fc7bdb356a50b2954a2096b10a8217e317806d111ee96ecd94d96cab" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.9/snailmail_0.0.9_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.9/snailmail_0.0.9_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.9</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7727953">7.4 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>a5a721c545da3c1c33ecaa2f56c5a4d370ef2e4175fcb12781486cf98b089612</code><button type="button" class="copy" data-copy="a5a721c545da3c1c33ecaa2f56c5a4d370ef2e4175fcb12781486cf98b089612" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.9/snailmail_0.0.9_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.9/snailmail_0.0.9_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.0.9</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="6850389">6.5 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>c226341d63b471c7e8cf025bfcad704660caab18b8e12d7bb2557bb36ab40a12</code><button type="button" class="copy" data-copy="c226341d63b471c7e8cf025bfcad704660caab18b8e12d7bb2557bb36ab40a12" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.9/snailmail_0.0.9_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.6/snailmail_0.0.6_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.6</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7819337">7.5 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>472104ea0faca501cb37665761a57b523d32fcb7a4154bf7e3a4c1e7ca367416</code><button type="button" class="copy" data-copy="472104ea0faca501cb37665761a57b523d32fcb7a4154bf7e3a4c1e7ca367416" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.6/snailmail_0.0.6_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.6/snailmail_0.0.6_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.0.6</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7137327">6.8 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>811b0ec4f36f47f46eac41d5aab6473703af18643864ece011d21105b98c02f4</code><button type="button" class="copy" data-copy="811b0ec4f36f47f46eac41d5aab6473703af18643864ece011d21105b98c02f4" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.6/snailmail_0.0.6_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.6/snailmail_0.0.6_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.6</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7641629">7.3 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>10f66f35f5d31a9860a73307b0bac669515a4460247249cf89fc46b7208fdd8b</code><button type="button" class="copy" data-copy="10f66f35f5d31a9860a73307b0bac669515a4460247249cf89fc46b7208fdd8b" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.6/snailmail_0.0.6_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.6/snailmail_0.0.6_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.6</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7713771">7.4 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>fa5517ff530dae013d33aec1e2d6743405bcbcf0b6ebb52c6a41630330add78b</code><button type="button" class="copy" data-copy="fa5517ff530dae013d33aec1e2d6743405bcbcf0b6ebb52c6a41630330add78b" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.6/snailmail_0.0.6_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.6/snailmail_0.0.6_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.0.6</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="6835555">6.5 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>edc0af6a679ac54c9186086d5e39752c1fe03b8356211082ddea6f3164b8d708</code><button type="button" class="copy" data-copy="edc0af6a679ac54c9186086d5e39752c1fe03b8356211082ddea6f3164b8d708" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.6/snailmail_0.0.6_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.5/snailmail_0.0.5_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.5</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7782226">7.4 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>80470ccde25c1572f1557ccfe97d5a21c9e05d057fe1e1a0c44e22f68328fc01</code><button type="button" class="copy" data-copy="80470ccde25c1572f1557ccfe97d5a21c9e05d057fe1e1a0c44e22f68328fc01" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.5/snailmail_0.0.5_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.5/snailmail_0.0.5_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.0.5</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7106189">6.8 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>2472b8bceb9732e4e6d9920fbfa329f3cbba473b85a0b9591ab846621540a3e4</code><button type="button" class="copy" data-copy="2472b8bceb9732e4e6d9920fbfa329f3cbba473b85a0b9591ab846621540a3e4" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.5/snailmail_0.0.5_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.5/snailmail_0.0.5_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.5</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7606831">7.3 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>75be721d634d391789be46f962c94f4b5eb5f3ae89f24d6c8cf94b9148a7230e</code><button type="button" class="copy" data-copy="75be721d634d391789be46f962c94f4b5eb5f3ae89f24d6c8cf94b9148a7230e" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.5/snailmail_0.0.5_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.5/snailmail_0.0.5_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.5</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7677328">7.3 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>1727128648471fb0282a1e546a8345dba27bd8e8b2d864ee4b1fa220106df69c</code><button type="button" class="copy" data-copy="1727128648471fb0282a1e546a8345dba27bd8e8b2d864ee4b1fa220106df69c" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.5/snailmail_0.0.5_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.5/snailmail_0.0.5_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.0.5</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="6804089">6.5 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>16e6b8dc94616d239ab4f9888386c04bcd3f362a5b44ffbc48d75a1462ebe40e</code><button type="button" class="copy" data-copy="16e6b8dc94616d239ab4f9888386c04bcd3f362a5b44ffbc48d75a1462ebe40e" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.5/snailmail_0.0.5_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.3/snailmail_0.0.3_darwin_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.3</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7702417">7.3 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>b6129231f07f2e9b19efa65fe96279cd965ea8958b28f69fbee22b3000048cba</code><button type="button" class="copy" data-copy="b6129231f07f2e9b19efa65fe96279cd965ea8958b28f69fbee22b3000048cba" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.3/snailmail_0.0.3_darwin_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.3/snailmail_0.0.3_darwin_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.0.3</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="7033798">6.7 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>731839970f0721e02f6ebd04a86624cccfa39954c530c84aedb0aa8919369ced</code><button type="button" class="copy" data-copy="731839970f0721e02f6ebd04a86624cccfa39954c530c84aedb0aa8919369ced" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.3/snailmail_0.0.3_darwin_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.3/snailmail_0.0.3_freebsd_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.3</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7529155">7.2 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>96c9d4f1271cb5482ed7c8400c834fe1bd7107bbad99857c996cb7b1370cf37a</code><button type="button" class="copy" data-copy="96c9d4f1271cb5482ed7c8400c834fe1bd7107bbad99857c996cb7b1370cf37a" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.3/snailmail_0.0.3_freebsd_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.3/snailmail_0.0.3_linux_amd64.tar.gz">snailmail</a></td><td data-label="Version">0.0.3</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="7599387">7.2 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>288ffbf00fec6ed630e99c804ef69441bd83ac6cf9ee29663f9886def613e8ac</code><button type="button" class="copy" data-copy="288ffbf00fec6ed630e99c804ef69441bd83ac6cf9ee29663f9886def613e8ac" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.3/snailmail_0.0.3_linux_amd64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="snailmail/0.0.3/snailmail_0.0.3_linux_arm64.tar.gz">snailmail</a></td><td data-label="Version">0.0.3</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="6733834">6.4 MiB</td><td class="when" data-label="Published" data-value="0"><span class="unknown">unknown</span></td><td class="digest" data-label="SHA-256"><code>ae0676e09fb158fd6a9c9b1b3cdd98358f29b42f7d2fd0dba82d3da276e107a2</code><button type="button" class="copy" data-copy="ae0676e09fb158fd6a9c9b1b3cdd98358f29b42f7d2fd0dba82d3da276e107a2" aria-label="Copy the SHA-256 of snailmail">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/snailmail/0.0.3/snailmail_0.0.3_linux_arm64.tar.gz" aria-label="Copy the download URL of snailmail">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="ttysvg/0.1.2/ttysvg_0.1.2_darwin_amd64.tar.gz">ttysvg</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="1305014">1.2 MiB</td><td class="when" data-label="Published" data-value="1785320265"><time datetime="2026-07-29T10:17:45Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>9439d2ce75c180fdcaa3cdb1e262526525d3762afa7ddf250373c9cff8c0ab5a</code><button type="button" class="copy" data-copy="9439d2ce75c180fdcaa3cdb1e262526525d3762afa7ddf250373c9cff8c0ab5a" aria-label="Copy the SHA-256 of ttysvg">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/ttysvg/0.1.2/ttysvg_0.1.2_darwin_amd64.tar.gz" aria-label="Copy the download URL of ttysvg">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="ttysvg/0.1.2/ttysvg_0.1.2_darwin_arm64.tar.gz">ttysvg</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="1209327">1.2 MiB</td><td class="when" data-label="Published" data-value="1785320265"><time datetime="2026-07-29T10:17:45Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>122f23c3e7ab1e829927062ae92261ed4c8d82b2104e1d2de3be433b66c62ca7</code><button type="button" class="copy" data-copy="122f23c3e7ab1e829927062ae92261ed4c8d82b2104e1d2de3be433b66c62ca7" aria-label="Copy the SHA-256 of ttysvg">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/ttysvg/0.1.2/ttysvg_0.1.2_darwin_arm64.tar.gz" aria-label="Copy the download URL of ttysvg">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="ttysvg/0.1.2/ttysvg_0.1.2_linux_386.tar.gz">ttysvg</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">386</td><td class="size" data-label="Size" data-value="1244819">1.2 MiB</td><td class="when" data-label="Published" data-value="1785320264"><time datetime="2026-07-29T10:17:44Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>03c6c86f7af044e43cf4dc8f2603d78704cf07dbc406b0f7eb2d74f006770ce0</code><button type="button" class="copy" data-copy="03c6c86f7af044e43cf4dc8f2603d78704cf07dbc406b0f7eb2d74f006770ce0" aria-label="Copy the SHA-256 of ttysvg">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/ttysvg/0.1.2/ttysvg_0.1.2_linux_386.tar.gz" aria-label="Copy the download URL of ttysvg">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="ttysvg/0.1.2/ttysvg_0.1.2_linux_amd64.tar.gz">ttysvg</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">amd64</td><td class="size" data-label="Size" data-value="1316747">1.3 MiB</td><td class="when" data-label="Published" data-value="1785320262"><time datetime="2026-07-29T10:17:42Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>879c0e74357fc71673c7aa99570a41731d81d44d8b3476d93a3d23bd2716bd1f</code><button type="button" class="copy" data-copy="879c0e74357fc71673c7aa99570a41731d81d44d8b3476d93a3d23bd2716bd1f" aria-label="Copy the SHA-256 of ttysvg">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/ttysvg/0.1.2/ttysvg_0.1.2_linux_amd64.tar.gz" aria-label="Copy the download URL of ttysvg">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="ttysvg/0.1.2/ttysvg_0.1.2_linux_arm.tar.gz">ttysvg</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">arm</td><td class="size" data-label="Size" data-value="1222951">1.2 MiB</td><td class="when" data-label="Published" data-value="1785320264"><time datetime="2026-07-29T10:17:44Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>c5c4b20bfd8201d665e56e251a8f3fe38409b485cee569b04e2a477cc7da14eb</code><button type="button" class="copy" data-copy="c5c4b20bfd8201d665e56e251a8f3fe38409b485cee569b04e2a477cc7da14eb" aria-label="Copy the SHA-256 of ttysvg">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/ttysvg/0.1.2/ttysvg_0.1.2_linux_arm.tar.gz" aria-label="Copy the download URL of ttysvg">Copy link</button></td></tr>
+<tr><td data-label="Package"><a href="ttysvg/0.1.2/ttysvg_0.1.2_linux_arm64.tar.gz">ttysvg</a></td><td data-label="Version">0.1.2</td><td data-label="Arch">arm64</td><td class="size" data-label="Size" data-value="1195425">1.1 MiB</td><td class="when" data-label="Published" data-value="1785320263"><time datetime="2026-07-29T10:17:43Z">2026-07-29</time></td><td class="digest" data-label="SHA-256"><code>83ec4c913e2339efdc7d02034be360cbbe46b4794678533c0d15b545152beebe</code><button type="button" class="copy" data-copy="83ec4c913e2339efdc7d02034be360cbbe46b4794678533c0d15b545152beebe" aria-label="Copy the SHA-256 of ttysvg">Copy</button></td><td class="link" data-label="Link"><button type="button" class="copy" data-copy="https://dl.shellcell.dev/releases/ttysvg/0.1.2/ttysvg_0.1.2_linux_arm64.tar.gz" aria-label="Copy the download URL of ttysvg">Copy link</button></td></tr>
+</tbody>
+</table>
+</div>
+<footer>51 artifacts. Every artifact is pinned by SHA-256 in a reviewed lock before publication.</footer>
+<script>
+document.addEventListener('click', function (event) {
+  var copy = event.target.closest('button.copy');
+  if (copy) {
+    navigator.clipboard.writeText(copy.dataset.copy).then(function () {
+      var was = copy.textContent;
+      copy.textContent = 'Copied';
+      setTimeout(function () { copy.textContent = was; }, 1200);
+    });
+    return;
+  }
+  var header = event.target.closest('th[data-column]');
+  if (!header) { return; }
+  event.preventDefault();
+  var table = header.closest('table');
+  var body = table.tBodies[0];
+  var column = Number(header.dataset.column);
+  var numeric = header.dataset.sort === 'number';
+  var descending = header.dataset.order !== 'desc';
+  Array.prototype.forEach.call(table.tHead.rows[0].cells, function (cell) {
+    delete cell.dataset.order;
+    cell.removeAttribute('aria-sort');
+  });
+  header.dataset.order = descending ? 'desc' : 'asc';
+  // Announced as well as drawn, so the arrow is not the only way to know.
+  header.setAttribute('aria-sort', descending ? 'descending' : 'ascending');
+  var rows = Array.prototype.slice.call(body.rows);
+  rows.sort(function (left, right) {
+    var a = left.cells[column], b = right.cells[column];
+    var result = numeric
+      ? Number(a.dataset.value) - Number(b.dataset.value)
+      : a.textContent.trim().localeCompare(b.textContent.trim(), undefined, { numeric: true });
+    return descending ? -result : result;
+  });
+  rows.forEach(function (row) { body.appendChild(row); });
+});
+
+// The filter is revealed here rather than in the markup: without this script it
+// would be an input that does nothing, and a control that ignores you is worse
+// than one that is absent.
+(function () {
+  var panel = document.querySelector('.filter');
+  var input = document.getElementById('filter');
+  var table = document.getElementById('artifacts');
+  if (!panel || !input || !table) { return; }
+  var count = panel.querySelector('.filter-count');
+  var rows = Array.prototype.slice.call(table.tBodies[0].rows);
+  panel.hidden = false;
+
+  // Matched against the row's own text rather than a prepared index, so a filter
+  // finds anything on the page — a name, a version, an architecture, a digest.
+  // Lower-cased once per row, because doing it per keystroke over five hundred
+  // rows is work nobody sees the benefit of.
+  var haystacks = rows.map(function (row) { return row.textContent.toLowerCase(); });
+
+  function apply() {
+    var needle = input.value.trim().toLowerCase();
+    var shown = 0;
+    rows.forEach(function (row, index) {
+      var matches = needle === '' || haystacks[index].indexOf(needle) !== -1;
+      row.hidden = !matches;
+      if (matches) { shown++; }
+    });
+    if (needle === '') {
+      count.textContent = '';
+      return;
+    }
+    count.textContent = shown === 0
+      ? 'No packages match ' + needle
+      : shown + ' of ' + rows.length + ' packages';
+  }
+
+  input.addEventListener('input', apply);
+  // Escape clears, which is what the control looks like it should do.
+  input.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') { input.value = ''; apply(); }
+  });
+})();</script>
+</body>
+</html>

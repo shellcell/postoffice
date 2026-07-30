@@ -155,6 +155,35 @@ kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.3/snailmail-0.1.3-1.x86_64.rpm'
 
 [[package_version]]
+package = 'snailmail'
+version = '0.1.4-1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail-0.1.4-1.aarch64.rpm'
+architecture = 'aarch64'
+size = 7379817
+sha256 = '8a9e9f255deec99f21cab22bff08091667456b60f0c147fa12560c25591edf23'
+added = '2026-07-30T21:43:56Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.4/snailmail-0.1.4-1.aarch64.rpm'
+provenance = 'operator'
+
+[[package_version.blob]]
+filename = 'snailmail-0.1.4-1.x86_64.rpm'
+architecture = 'x86_64'
+size = 8287433
+sha256 = '29a6d0577660476eddbed99cbc9fdac57241f293e17cbe751fa268122399b39f'
+added = '2026-07-30T21:43:56Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.4/snailmail-0.1.4-1.x86_64.rpm'
+provenance = 'operator'
+
+[[package_version]]
 package = 'ttysvg'
 version = '0.1.2-1'
 state = 'draft'
@@ -208,6 +237,11 @@ track = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.1.3-1'
+track = 'stable'
+
+[[placement]]
+package = 'snailmail'
+version = '0.1.4-1'
 track = 'stable'
 
 [[placement]]

@@ -155,6 +155,35 @@ kind = 'https'
 url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.3/snailmail_0.1.3-r1_x86_64.apk'
 
 [[package_version]]
+package = 'snailmail'
+version = '0.1.4-r1'
+state = 'draft'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.4-r1_aarch64.apk'
+architecture = 'aarch64'
+size = 7378379
+sha256 = '8910729c4433cec496d84259109c3b5a7c4fe200e09c40b02e403857215ba424'
+added = '2026-07-30T21:43:59Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.4/snailmail_0.1.4-r1_aarch64.apk'
+provenance = 'operator'
+
+[[package_version.blob]]
+filename = 'snailmail_0.1.4-r1_x86_64.apk'
+architecture = 'x86_64'
+size = 8284888
+sha256 = '2f08620ff8fd9b91821e76d213e875d027325f458f0237942b46f3675b40cd6c'
+added = '2026-07-30T21:43:59Z'
+
+[package_version.blob.origin]
+kind = 'https'
+url = 'https://github.com/shellcell/snailmail/releases/download/v0.1.4/snailmail_0.1.4-r1_x86_64.apk'
+provenance = 'operator'
+
+[[package_version]]
 package = 'ttysvg'
 version = '0.1.2'
 state = 'draft'
@@ -208,6 +237,11 @@ track = 'stable'
 [[placement]]
 package = 'snailmail'
 version = '0.1.3-r1'
+track = 'stable'
+
+[[placement]]
+package = 'snailmail'
+version = '0.1.4-r1'
 track = 'stable'
 
 [[placement]]
